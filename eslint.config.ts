@@ -21,10 +21,18 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  // External/integration components: refine-ui, shadcn (components/ui)
+  // Avoid modifying upstream patterns; disable strict rules for these dirs
   {
-    files: ['src/components/ui/**/*.tsx'],
+    files: [
+      'src/components/refine-ui/**/*.{ts,tsx}',
+      'src/components/ui/**/*.{ts,tsx}',
+    ],
     rules: {
       'react-refresh/only-export-components': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/static-components': 'off',
+      'react-hooks/purity': 'off',
     },
   },
 ])

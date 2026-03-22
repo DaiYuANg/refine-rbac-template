@@ -1,6 +1,12 @@
 import { Refine, Authenticated } from '@refinedev/core'
 import routerProvider from '@refinedev/react-router'
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from 'react-router-dom'
 import { LayoutDashboard } from 'lucide-react'
 import {
   dataProviderInstance,

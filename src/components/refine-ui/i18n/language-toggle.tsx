@@ -25,7 +25,9 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
   const { i18n } = useTranslation()
 
   const currentLocale = (i18n.language?.split('-')[0] || 'en') as Locale
-  const resolvedLocale = ['zh', 'en'].includes(currentLocale) ? currentLocale : 'en'
+  const resolvedLocale = ['zh', 'en'].includes(currentLocale)
+    ? currentLocale
+    : 'en'
 
   return (
     <DropdownMenu>
@@ -35,7 +37,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
           size="icon"
           className={cn(
             'rounded-full border-sidebar-border bg-transparent h-10 w-10',
-            className,
+            className
           )}
         >
           <Languages className="h-[1.2rem] w-[1.2rem]" />

@@ -1,6 +1,9 @@
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ListView, ListViewHeader } from '@/components/refine-ui/views/list-view'
+import {
+  ListView,
+  ListViewHeader,
+} from '@/components/refine-ui/views/list-view'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -43,20 +46,27 @@ export function PermissionList() {
                 <TableHead>{t('permissions.name')}</TableHead>
                 <TableHead>{t('permissions.code')}</TableHead>
                 <TableHead>{t('permissions.groupId')}</TableHead>
-                <TableHead className="w-[120px] text-right">{t('common.actions')}</TableHead>
+                <TableHead className="w-[120px] text-right">
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {permissions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {t('common.noData')}
                   </TableCell>
                 </TableRow>
               ) : (
                 permissions.map((perm: Permission) => (
                   <TableRow key={perm.id}>
-                    <TableCell className="font-mono text-xs">{perm.id}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {perm.id}
+                    </TableCell>
                     <TableCell>
                       <ShowButton
                         resource="permissions"
@@ -68,7 +78,9 @@ export function PermissionList() {
                         {perm.name}
                       </ShowButton>
                     </TableCell>
-                    <TableCell className="font-mono text-xs">{perm.code}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {perm.code}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {perm.groupId ?? '-'}
                     </TableCell>

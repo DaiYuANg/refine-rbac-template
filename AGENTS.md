@@ -99,21 +99,21 @@ This project should avoid modifying original `shadcn/ui` components and componen
 1. Prefer composition, wrappers, configuration, slots, and style overrides to satisfy business requirements.
 2. Only modify component implementations when the requirement cannot be solved in a non-intrusive way.
 3. Before modifying such components, confirm that:
-    - the problem cannot be solved with a wrapper
-    - the problem cannot be solved through props or configuration
-    - the problem cannot be solved through `className`, `variant`, or composition
+   - the problem cannot be solved with a wrapper
+   - the problem cannot be solved through props or configuration
+   - the problem cannot be solved through `className`, `variant`, or composition
 4. Modifications to original `shadcn/ui` components must be treated as a last resort, not a normal development approach.
 5. Modifications to components from the `refine` + `shadcn/ui` integration layer must also be treated as a last resort. Prefer solving such issues in the project’s own adapter or wrapper layer.
 6. If behavior must be adjusted, prefer introducing an intermediate business-side component instead of directly changing upstream base components.
 7. Such modifications must have a clear and explicit reason, for example:
-    - a real functional limitation or defect
-    - a type limitation that cannot be solved through composition
-    - a clear accessibility issue
-    - a project-wide behavior requirement that cannot be implemented through wrapping
+   - a real functional limitation or defect
+   - a type limitation that cannot be solved through composition
+   - a clear accessibility issue
+   - a project-wide behavior requirement that cannot be implemented through wrapping
 8. Any modification to `shadcn/ui` components or refine integration components must be documented in code comments or project documentation, including:
-    - why the modification was needed
-    - what the impact scope is
-    - why alternative approaches were not sufficient
+   - why the modification was needed
+   - what the impact scope is
+   - why alternative approaches were not sufficient
 
 ### Forbidden
 
@@ -123,7 +123,6 @@ This project should avoid modifying original `shadcn/ui` components and componen
 - putting business logic, permission logic, or request logic into base UI components or integration components
 - pushing business-layer problems down into foundational component changes
 
-
 ### Preferred direction
 
 - prefer wrapper components
@@ -131,6 +130,7 @@ This project should avoid modifying original `shadcn/ui` components and componen
 - prefer feature-level adapters
 - prefer style overrides over source changes
 - prefer project-local extensions over upstream modification
+
 ---
 
 ## Data Provider Rules
@@ -140,12 +140,12 @@ All application requests must go through the **Refine data provider**.
 ### Mandatory rules
 
 1. Standard resource operations must use regular data provider methods such as:
-    - `getList`
-    - `getOne`
-    - `create`
-    - `update`
-    - `deleteOne`
-    - other standard refine resource methods where applicable
+   - `getList`
+   - `getOne`
+   - `create`
+   - `update`
+   - `deleteOne`
+   - other standard refine resource methods where applicable
 2. Non-standard or non-resource-oriented endpoints must still go through the data provider.
 3. These special requests must use `dataProvider.custom`.
 4. Pages, components, and feature modules must not call axios directly for business requests.
@@ -181,7 +181,7 @@ This project uses **1-based pagination**.
 
 ### Standard contract
 
-~~~ts
+```ts
 export type PageRequest = {
   page: number // 1-based
   pageSize: number
@@ -193,7 +193,7 @@ export type PageResponse<T> = {
   page: number // 1-based
   pageSize: number
 }
-~~~
+```
 
 If backend payloads differ, adapt them in the data provider or adapter layer.
 
@@ -222,11 +222,11 @@ This repository uses **MSW** as the default mock solution.
 - Organize mock handlers by domain or feature.
 - Reuse the same request/response contract types used by the application.
 - Cover at least:
-    - login / current user
-    - role / permission loading
-    - paginated list pages
-    - create / update / delete flows where relevant
-    - common error scenarios
+  - login / current user
+  - role / permission loading
+  - paginated list pages
+  - create / update / delete flows where relevant
+  - common error scenarios
 
 ### Forbidden
 
@@ -511,7 +511,7 @@ If test tooling is introduced, keep it compatible with the rest of the stack and
 
 Follow a directory style close to common Refine application structure, while keeping a dedicated `providers/` directory for Refine-related providers.
 
-~~~text
+```text
 src/
   components/
     ui/
@@ -542,7 +542,7 @@ src/
     browser.ts
   app.tsx
   main.tsx
-~~~
+```
 
 ### Directory notes
 

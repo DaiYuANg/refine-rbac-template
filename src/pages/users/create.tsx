@@ -3,7 +3,10 @@ import { useForm } from '@refinedev/react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
-import { CreateView, CreateViewHeader } from '@/components/refine-ui/views/create-view'
+import {
+  CreateView,
+  CreateViewHeader,
+} from '@/components/refine-ui/views/create-view'
 import {
   Form,
   FormControl,
@@ -57,10 +60,7 @@ export function UserCreate() {
               <FormItem>
                 <FormLabel>{t('users.name')}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    disabled={formLoading}
-                  />
+                  <Input {...field} disabled={formLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,11 +73,7 @@ export function UserCreate() {
               <FormItem>
                 <FormLabel>{t('users.email')}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    disabled={formLoading}
-                  />
+                  <Input {...field} type="email" disabled={formLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

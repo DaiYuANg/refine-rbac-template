@@ -1,6 +1,9 @@
 import { useShow } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ShowView, ShowViewHeader } from '@/components/refine-ui/views/show-view'
+import {
+  ShowView,
+  ShowViewHeader,
+} from '@/components/refine-ui/views/show-view'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Role } from '@/types/role'
 
@@ -28,7 +31,9 @@ export function RoleShow() {
       <ShowViewHeader resource="roles" />
       <dl className="grid gap-4 max-w-md">
         <div>
-          <dt className="text-sm font-medium text-muted-foreground">{t('roles.name')}</dt>
+          <dt className="text-sm font-medium text-muted-foreground">
+            {t('roles.name')}
+          </dt>
           <dd className="mt-1">{role.name}</dd>
         </div>
         <div>

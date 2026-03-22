@@ -3,7 +3,10 @@ import { useForm } from '@refinedev/react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
-import { EditView, EditViewHeader } from '@/components/refine-ui/views/edit-view'
+import {
+  EditView,
+  EditViewHeader,
+} from '@/components/refine-ui/views/edit-view'
 import {
   Form,
   FormControl,
@@ -81,11 +84,7 @@ export function UserEdit() {
               <FormItem>
                 <FormLabel>{t('users.email')}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    disabled={formLoading}
-                  />
+                  <Input {...field} type="email" disabled={formLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

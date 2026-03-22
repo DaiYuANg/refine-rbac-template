@@ -3,7 +3,10 @@ import { useForm } from '@refinedev/react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
-import { EditView, EditViewHeader } from '@/components/refine-ui/views/edit-view'
+import {
+  EditView,
+  EditViewHeader,
+} from '@/components/refine-ui/views/edit-view'
 import {
   Form,
   FormControl,
@@ -59,7 +62,10 @@ export function RoleEdit() {
       <Form {...form}>
         <form
           onSubmit={handleSubmit((values) =>
-            onFinish({ ...values, description: values.description || undefined })
+            onFinish({
+              ...values,
+              description: values.description || undefined,
+            })
           )}
           className="flex flex-col gap-6 max-w-md"
         >
@@ -83,7 +89,11 @@ export function RoleEdit() {
               <FormItem>
                 <FormLabel>{t('roles.description')}</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? ''} disabled={formLoading} />
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={formLoading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

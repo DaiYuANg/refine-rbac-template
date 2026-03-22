@@ -1,6 +1,9 @@
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ListView, ListViewHeader } from '@/components/refine-ui/views/list-view'
+import {
+  ListView,
+  ListViewHeader,
+} from '@/components/refine-ui/views/list-view'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -42,20 +45,27 @@ export function PermissionGroupList() {
                 <TableHead>ID</TableHead>
                 <TableHead>{t('permissionGroups.name')}</TableHead>
                 <TableHead>{t('permissionGroups.description')}</TableHead>
-                <TableHead className="w-[120px] text-right">{t('common.actions')}</TableHead>
+                <TableHead className="w-[120px] text-right">
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {groups.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {t('common.noData')}
                   </TableCell>
                 </TableRow>
               ) : (
                 groups.map((group: PermissionGroup) => (
                   <TableRow key={group.id}>
-                    <TableCell className="font-mono text-xs">{group.id}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {group.id}
+                    </TableCell>
                     <TableCell>
                       <ShowButton
                         resource="permission-groups"

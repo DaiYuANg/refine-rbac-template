@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ListView, ListViewHeader } from '@/components/refine-ui/views/list-view'
+import {
+  ListView,
+  ListViewHeader,
+} from '@/components/refine-ui/views/list-view'
 import { UserListFilter } from '@/components/refine-ui/table/user-list-filter'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
@@ -51,20 +54,27 @@ export function UserList() {
                 <TableHead>ID</TableHead>
                 <TableHead>{t('users.name')}</TableHead>
                 <TableHead>{t('users.email')}</TableHead>
-                <TableHead className="w-[120px] text-right">{t('common.actions')}</TableHead>
+                <TableHead className="w-[120px] text-right">
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {t('common.noData')}
                   </TableCell>
                 </TableRow>
               ) : (
                 users.map((user: User) => (
                   <TableRow key={user.id}>
-                    <TableCell className="font-mono text-xs">{user.id}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {user.id}
+                    </TableCell>
                     <TableCell>
                       <ShowButton
                         resource="users"

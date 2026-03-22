@@ -15,7 +15,7 @@ const permissionGroups = [...MOCK_PERMISSION_GROUPS]
 function createCrudHandlers<T extends { id: string }>(
   path: string,
   store: T[],
-  defaultFields: Partial<T>,
+  defaultFields: Partial<T>
 ) {
   return [
     http.get(`${API_BASE}${path}`, ({ request }) => {
@@ -112,7 +112,11 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/users`, async ({ request }) => {
-    const body = (await request.json()) as { email: string; name: string; avatar?: string }
+    const body = (await request.json()) as {
+      email: string
+      name: string
+      avatar?: string
+    }
     const user = {
       id: String(users.length + 1),
       email: body.email ?? '',
@@ -127,7 +131,11 @@ export const handlers = [
   http.patch(`${API_BASE}/users/:id`, async ({ params, request }) => {
     const idx = users.findIndex((u) => u.id === params.id)
     if (idx === -1) return new HttpResponse(null, { status: 404 })
-    const body = (await request.json()) as Partial<{ email: string; name: string; avatar: string }>
+    const body = (await request.json()) as Partial<{
+      email: string
+      name: string
+      avatar: string
+    }>
     users[idx] = { ...users[idx], ...body }
     return HttpResponse.json(users[idx])
   }),

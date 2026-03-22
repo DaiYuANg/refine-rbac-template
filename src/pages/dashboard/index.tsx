@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useTranslation } from 'react-i18next'
 import {
@@ -53,17 +53,17 @@ export function DashboardPage() {
         {DASHBOARD_STAT_CARDS.map(({ key, value, labelKey }) => {
           const Icon = STAT_CARD_ICONS[key] ?? Users
           return (
-          <Card key={key}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t(labelKey)}
-              </CardTitle>
-              <Icon className="size-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{value}</div>
-            </CardContent>
-          </Card>
+            <Card key={key}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {t(labelKey)}
+                </CardTitle>
+                <Icon className="size-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{value}</div>
+              </CardContent>
+            </Card>
           )
         })}
       </div>
@@ -82,17 +82,46 @@ export function DashboardPage() {
                 <AreaChart data={DASHBOARD_USER_ACTIVITY}>
                   <defs>
                     <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--chart-1)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0} />
+                      <stop
+                        offset="5%"
+                        stopColor="var(--chart-1)"
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="var(--chart-1)"
+                        stopOpacity={0}
+                      />
                     </linearGradient>
                     <linearGradient id="fillLogins" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0} />
+                      <stop
+                        offset="5%"
+                        stopColor="var(--chart-2)"
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="var(--chart-2)"
+                        stopOpacity={0}
+                      />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
-                  <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    className="stroke-muted"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fontSize: 12 }}
+                  />
                   <Tooltip
                     contentStyle={{
                       borderRadius: '8px',
@@ -127,7 +156,9 @@ export function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('dashboard.roleDistribution')}</CardTitle>
-            <CardDescription>{t('dashboard.roleDistributionDesc')}</CardDescription>
+            <CardDescription>
+              {t('dashboard.roleDistributionDesc')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[280px] w-full">
@@ -141,7 +172,9 @@ export function DashboardPage() {
                     outerRadius={90}
                     paddingAngle={2}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                    label={({ name, percent }) =>
+                      `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+                    }
                   >
                     {DASHBOARD_ROLE_DISTRIBUTION.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -166,14 +199,29 @@ export function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>{t('dashboard.permissionGroups')}</CardTitle>
-          <CardDescription>{t('dashboard.permissionGroupsDesc')}</CardDescription>
+          <CardDescription>
+            {t('dashboard.permissionGroupsDesc')}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={DASHBOARD_PERMISSION_GROUPS} layout="vertical" margin={{ left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-muted" />
-                <XAxis type="number" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
+              <BarChart
+                data={DASHBOARD_PERMISSION_GROUPS}
+                layout="vertical"
+                margin={{ left: 20 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  horizontal={false}
+                  className="stroke-muted"
+                />
+                <XAxis
+                  type="number"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fontSize: 12 }}
+                />
                 <YAxis
                   type="category"
                   dataKey="name"
@@ -189,7 +237,11 @@ export function DashboardPage() {
                     backgroundColor: 'var(--card)',
                   }}
                 />
-                <Bar dataKey="count" fill="var(--chart-3)" radius={[0, 4, 4, 0]} />
+                <Bar
+                  dataKey="count"
+                  fill="var(--chart-3)"
+                  radius={[0, 4, 4, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>

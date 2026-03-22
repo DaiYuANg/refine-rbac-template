@@ -10,7 +10,8 @@ export function getAvatarFallback(name: string): string {
   const first = n[0]
   const code = first.charCodeAt(0)
   // CJK Unified Ideographs + Extension A
-  const isCjk = (code >= 0x4e00 && code <= 0x9fff) || (code >= 0x3400 && code <= 0x4dbf)
+  const isCjk =
+    (code >= 0x4e00 && code <= 0x9fff) || (code >= 0x3400 && code <= 0x4dbf)
   if (isCjk) return first
   // Latin/English: first letter of first word + first letter of last word (if multiple)
   const parts = n.split(/\s+/).filter(Boolean)

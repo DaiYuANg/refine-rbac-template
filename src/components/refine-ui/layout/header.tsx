@@ -2,113 +2,113 @@ import {
   useRefineOptions,
   useActiveAuthProvider,
   useLogout,
-} from "@refinedev/core";
-import { useTranslation } from "react-i18next";
+} from '@refinedev/core'
+import { useTranslation } from 'react-i18next'
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
-import { LanguageToggle } from "@/components/refine-ui/i18n/language-toggle";
-import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
-import { useSidebar, SidebarTrigger } from "@/components/ui/sidebar";
-import { LogOutIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dropdown-menu'
+import { DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { ThemeToggle } from '@/components/refine-ui/theme/theme-toggle'
+import { LanguageToggle } from '@/components/refine-ui/i18n/language-toggle'
+import { UserAvatar } from '@/components/refine-ui/layout/user-avatar'
+import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar'
+import { LogOutIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export const Header = () => {
-  const { isMobile } = useSidebar();
+  const { isMobile } = useSidebar()
 
-  return <>{isMobile ? <MobileHeader /> : <DesktopHeader />}</>;
-};
+  return <>{isMobile ? <MobileHeader /> : <DesktopHeader />}</>
+}
 
 function DesktopHeader() {
   return (
     <header
       className={cn(
-        "sticky",
-        "top-0",
-        "flex",
-        "h-16",
-        "shrink-0",
-        "items-center",
-        "gap-4",
-        "border-b",
-        "border-border",
-        "bg-sidebar",
-        "pr-3",
-        "justify-end",
-        "z-40",
+        'sticky',
+        'top-0',
+        'flex',
+        'h-16',
+        'shrink-0',
+        'items-center',
+        'gap-4',
+        'border-b',
+        'border-border',
+        'bg-sidebar',
+        'pr-3',
+        'justify-end',
+        'z-40'
       )}
     >
       <LanguageToggle />
       <ThemeToggle />
       <UserDropdown />
     </header>
-  );
+  )
 }
 
 function MobileHeader() {
-  const { open, isMobile } = useSidebar();
+  const { open, isMobile } = useSidebar()
 
-  const { title } = useRefineOptions();
+  const { title } = useRefineOptions()
 
   return (
     <header
       className={cn(
-        "sticky",
-        "top-0",
-        "flex",
-        "h-12",
-        "shrink-0",
-        "items-center",
-        "gap-2",
-        "border-b",
-        "border-border",
-        "bg-sidebar",
-        "pr-3",
-        "justify-between",
-        "z-40",
+        'sticky',
+        'top-0',
+        'flex',
+        'h-12',
+        'shrink-0',
+        'items-center',
+        'gap-2',
+        'border-b',
+        'border-border',
+        'bg-sidebar',
+        'pr-3',
+        'justify-between',
+        'z-40'
       )}
     >
       <SidebarTrigger
-        className={cn("text-muted-foreground", "rotate-180", "ml-1", {
-          "opacity-0": open,
-          "opacity-100": !open || isMobile,
-          "pointer-events-auto": !open || isMobile,
-          "pointer-events-none": open && !isMobile,
+        className={cn('text-muted-foreground', 'rotate-180', 'ml-1', {
+          'opacity-0': open,
+          'opacity-100': !open || isMobile,
+          'pointer-events-auto': !open || isMobile,
+          'pointer-events-none': open && !isMobile,
         })}
       />
 
       <div
         className={cn(
-          "whitespace-nowrap",
-          "flex",
-          "flex-row",
-          "h-full",
-          "items-center",
-          "justify-start",
-          "gap-2",
-          "transition-discrete",
-          "duration-200",
+          'whitespace-nowrap',
+          'flex',
+          'flex-row',
+          'h-full',
+          'items-center',
+          'justify-start',
+          'gap-2',
+          'transition-discrete',
+          'duration-200',
           {
-            "pl-3": !open,
-            "pl-5": open,
-          },
+            'pl-3': !open,
+            'pl-5': open,
+          }
         )}
       >
         <div>{title.icon}</div>
         <h2
           className={cn(
-            "text-sm",
-            "font-bold",
-            "transition-opacity",
-            "duration-200",
+            'text-sm',
+            'font-bold',
+            'transition-opacity',
+            'duration-200',
             {
-              "opacity-0": !open,
-              "opacity-100": open,
-            },
+              'opacity-0': !open,
+              'opacity-100': open,
+            }
           )}
         >
           {title.text}
@@ -116,21 +116,21 @@ function MobileHeader() {
       </div>
 
       <div className="flex items-center gap-2">
-        <LanguageToggle className={cn("h-8", "w-8")} />
-        <ThemeToggle className={cn("h-8", "w-8")} />
+        <LanguageToggle className={cn('h-8', 'w-8')} />
+        <ThemeToggle className={cn('h-8', 'w-8')} />
       </div>
     </header>
-  );
+  )
 }
 
 const UserDropdown = () => {
-  const { t } = useTranslation();
-  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+  const { t } = useTranslation()
+  const { mutate: logout, isPending: isLoggingOut } = useLogout()
 
-  const authProvider = useActiveAuthProvider();
+  const authProvider = useActiveAuthProvider()
 
   if (!authProvider?.getIdentity) {
-    return null;
+    return null
   }
 
   return (
@@ -141,21 +141,21 @@ const UserDropdown = () => {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => {
-            logout();
+            logout()
           }}
         >
           <LogOutIcon
-            className={cn("text-destructive", "hover:text-destructive")}
+            className={cn('text-destructive', 'hover:text-destructive')}
           />
-          <span className={cn("text-destructive", "hover:text-destructive")}>
-            {isLoggingOut ? t("auth.loggingOut") : t("auth.logout")}
+          <span className={cn('text-destructive', 'hover:text-destructive')}>
+            {isLoggingOut ? t('auth.loggingOut') : t('auth.logout')}
           </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
 
-Header.displayName = "Header";
-MobileHeader.displayName = "MobileHeader";
-DesktopHeader.displayName = "DesktopHeader";
+Header.displayName = 'Header'
+MobileHeader.displayName = 'MobileHeader'
+DesktopHeader.displayName = 'DesktopHeader'

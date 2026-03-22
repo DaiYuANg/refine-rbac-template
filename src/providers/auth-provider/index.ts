@@ -10,7 +10,10 @@ export const authProvider: AuthProvider = {
     if (!username?.trim()) {
       return {
         success: false,
-        error: { name: 'LoginError', message: i18n.t('login.requiredUsername') },
+        error: {
+          name: 'LoginError',
+          message: i18n.t('login.requiredUsername'),
+        },
       }
     }
     localStorage.setItem(AUTH_STORAGE_KEY, '1')

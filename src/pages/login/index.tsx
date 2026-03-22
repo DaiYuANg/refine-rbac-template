@@ -26,7 +26,7 @@ function LoginForm() {
   return (
     <div
       className={cn(
-        'relative flex min-h-svh w-full flex-col items-center justify-center bg-muted/30 p-4',
+        'relative flex min-h-svh w-full flex-col items-center justify-center bg-muted/30 p-4'
       )}
     >
       <div className="absolute right-4 top-4 flex items-center gap-2">

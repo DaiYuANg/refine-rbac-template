@@ -1,6 +1,9 @@
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ListView, ListViewHeader } from '@/components/refine-ui/views/list-view'
+import {
+  ListView,
+  ListViewHeader,
+} from '@/components/refine-ui/views/list-view'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -42,20 +45,27 @@ export function RoleList() {
                 <TableHead>ID</TableHead>
                 <TableHead>{t('roles.name')}</TableHead>
                 <TableHead>{t('roles.description')}</TableHead>
-                <TableHead className="w-[120px] text-right">{t('common.actions')}</TableHead>
+                <TableHead className="w-[120px] text-right">
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {roles.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {t('common.noData')}
                   </TableCell>
                 </TableRow>
               ) : (
                 roles.map((role: Role) => (
                   <TableRow key={role.id}>
-                    <TableCell className="font-mono text-xs">{role.id}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {role.id}
+                    </TableCell>
                     <TableCell>
                       <ShowButton
                         resource="roles"
@@ -84,7 +94,11 @@ export function RoleList() {
                           variant="outline"
                           size="sm"
                         />
-                        <DeleteButton resource="roles" recordItemId={role.id} size="sm" />
+                        <DeleteButton
+                          resource="roles"
+                          recordItemId={role.id}
+                          size="sm"
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

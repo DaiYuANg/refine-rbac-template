@@ -14,14 +14,12 @@ function mount() {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <App />
-    </StrictMode>,
+    </StrictMode>
   )
 }
 
 if (env.isDev) {
-  worker
-    .start({ onUnhandledRequest: 'bypass', quiet: true })
-    .then(mount)
+  worker.start({ onUnhandledRequest: 'bypass', quiet: true }).then(mount)
 } else {
   mount()
 }

@@ -18,10 +18,26 @@ export default defineConfig(({ command }) => ({
       output: {
         codeSplitting: {
           groups: [
-            { name: 'react-vendor', test: /node_modules[\\/](react|react-dom|scheduler)/, priority: 20 },
-            { name: 'refine-vendor', test: /node_modules[\\/]@refinedev/, priority: 18 },
-            { name: 'recharts-vendor', test: /node_modules[\\/]recharts/, priority: 16 },
-            { name: 'ui-vendor', test: /node_modules[\\/](radix-ui|@radix-ui|lucide-react|cmdk)/, priority: 14 },
+            {
+              name: 'react-vendor',
+              test: /node_modules[\\/](react|react-dom|scheduler)/,
+              priority: 20,
+            },
+            {
+              name: 'refine-vendor',
+              test: /node_modules[\\/]@refinedev/,
+              priority: 18,
+            },
+            {
+              name: 'recharts-vendor',
+              test: /node_modules[\\/]recharts/,
+              priority: 16,
+            },
+            {
+              name: 'ui-vendor',
+              test: /node_modules[\\/](radix-ui|@radix-ui|lucide-react|cmdk)/,
+              priority: 14,
+            },
             { name: 'vendor', test: /node_modules/, priority: 10 },
           ],
         },

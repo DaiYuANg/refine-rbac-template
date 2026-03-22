@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useState, useEffect, useCallback } from 'react'
 import { useList } from '@refinedev/core'
@@ -23,13 +23,16 @@ export type UserListFilterProps = {
 const QUERY_FIELD = 'q'
 
 function getFilterValue(filters?: CrudFilters): string {
-  const f = filters?.find(
-    (x) => 'field' in x && x.field === QUERY_FIELD
-  ) as { field: string; operator: string; value: string } | undefined
+  const f = filters?.find((x) => 'field' in x && x.field === QUERY_FIELD) as
+    | { field: string; operator: string; value: string }
+    | undefined
   return f?.value ?? ''
 }
 
-export function UserListFilter({ filters, onFiltersChange }: UserListFilterProps) {
+export function UserListFilter({
+  filters,
+  onFiltersChange,
+}: UserListFilterProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState(() => getFilterValue(filters))
@@ -52,7 +55,9 @@ export function UserListFilter({ filters, onFiltersChange }: UserListFilterProps
     },
   })
 
-  const suggestions = Array.isArray(suggestionsResult?.data) ? suggestionsResult.data : []
+  const suggestions = Array.isArray(suggestionsResult?.data)
+    ? suggestionsResult.data
+    : []
 
   const applyFilter = useCallback(
     (value: string) => {
@@ -139,7 +144,9 @@ export function UserListFilter({ filters, onFiltersChange }: UserListFilterProps
                           onClick={() => applyFilter(user.name)}
                         >
                           <span>{user.name}</span>
-                          <span className="text-xs text-muted-foreground">{user.email}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {user.email}
+                          </span>
                         </button>
                       ))}
                     </div>

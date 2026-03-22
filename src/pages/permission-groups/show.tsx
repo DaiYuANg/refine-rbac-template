@@ -1,6 +1,9 @@
 import { useShow } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
-import { ShowView, ShowViewHeader } from '@/components/refine-ui/views/show-view'
+import {
+  ShowView,
+  ShowViewHeader,
+} from '@/components/refine-ui/views/show-view'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { PermissionGroup } from '@/types/permission-group'
 
