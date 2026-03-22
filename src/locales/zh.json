@@ -1,0 +1,122 @@
+{
+  "users": "用户",
+  "roles": "角色",
+  "permissions": "权限",
+  "permission-groups": {
+    "permission-groups": "权限组"
+  },
+  "actions": {
+    "list": "列表",
+    "create": "创建",
+    "edit": "编辑",
+    "show": "查看"
+  },
+  "buttons": {
+    "create": "创建",
+    "edit": "编辑",
+    "show": "查看",
+    "delete": "删除",
+    "refresh": "刷新",
+    "cancel": "取消",
+    "confirm": "确认要执行此操作吗？",
+    "save": "保存",
+    "export": "导出",
+    "import": "导入",
+    "list": "列表",
+    "notAccessTitle": "无访问权限"
+  },
+  "common": {
+    "search": "关键字搜索",
+    "loading": "加载中…",
+    "save": "保存",
+    "create": "创建",
+    "edit": "编辑",
+    "delete": "删除",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitting": "提交中…",
+    "saving": "保存中…",
+    "noData": "暂无数据",
+    "actions": "操作"
+  },
+  "app": {
+    "title": "RBAC Template",
+    "home": "首页"
+  },
+  "dashboard": {
+    "welcome": "欢迎使用 RBAC 权限管理系统",
+    "totalUsers": "用户总数",
+    "totalRoles": "角色总数",
+    "totalPermissions": "权限总数",
+    "activeSessions": "活跃会话",
+    "userActivity": "用户活跃趋势",
+    "userActivityDesc": "近 6 个月用户数与登录次数",
+    "roleDistribution": "角色分布",
+    "roleDistributionDesc": "各角色用户数量占比",
+    "permissionGroups": "权限组统计",
+    "permissionGroupsDesc": "各权限组下权限数量",
+    "users": "用户数",
+    "chartUsers": "用户数",
+    "chartLogins": "登录次数"
+  },
+  "login": {
+    "title": "请登录以继续管理权限",
+    "requiredUsername": "请输入用户名",
+    "username": "用户名",
+    "password": "密码",
+    "login": "登录",
+    "loggingIn": "登录中…",
+    "placeholderUsername": "demo",
+    "placeholderPassword": "任意（演示环境）",
+    "demoHint": "模板演示：任意用户名即可登录，接入真实 API 后请替换校验逻辑。"
+  },
+  "auth": {
+    "logout": "退出登录",
+    "loggingOut": "退出中…"
+  },
+  "notifications": {
+    "success": "成功",
+    "createSuccess": "{{resource}} 创建成功",
+    "editSuccess": "{{resource}} 更新成功",
+    "deleteSuccess": "{{resource}} 删除成功",
+    "createError": "创建 {{resource}} 失败",
+    "editError": "更新 {{resource}} 失败",
+    "deleteError": "删除 {{resource}} 失败",
+    "error": "发生错误"
+  },
+  "users": {
+    "users": "用户",
+    "title": "用户",
+    "name": "姓名",
+    "email": "邮箱",
+    "createTitle": "新建用户",
+    "searchPlaceholder": "按姓名或邮箱搜索…",
+    "suggestions": "匹配结果",
+    "noSuggestions": "无匹配",
+    "typeToSearch": "输入以搜索",
+    "searchByKeyword": "按「{{keyword}}」关键字查询"
+  },
+  "roles": {
+    "roles": "角色",
+    "title": "角色",
+    "name": "名称",
+    "description": "描述",
+    "createTitle": "新建角色"
+  },
+  "permissions": {
+    "permissions": "权限",
+    "title": "权限",
+    "name": "名称",
+    "code": "编码",
+    "groupId": "权限组ID",
+    "createTitle": "新建权限",
+    "codePlaceholder": "如 users:read"
+  },
+  "permissionGroups": {
+    "permissionGroups": "权限组",
+    "title": "权限组",
+    "name": "名称",
+    "description": "描述",
+    "createTitle": "新建权限组"
+  }
+}

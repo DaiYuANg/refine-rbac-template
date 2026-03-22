@@ -1,0 +1,122 @@
+{
+  "users": "Users",
+  "roles": "Roles",
+  "permissions": "Permissions",
+  "permission-groups": {
+    "permission-groups": "Permission Group"
+  },
+  "actions": {
+    "list": "List",
+    "create": "Create",
+    "edit": "Edit",
+    "show": "Show"
+  },
+  "buttons": {
+    "create": "Create",
+    "edit": "Edit",
+    "show": "Show",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "confirm": "Are you sure?",
+    "save": "Save",
+    "export": "Export",
+    "import": "Import",
+    "list": "List",
+    "notAccessTitle": "You don't have permission to access"
+  },
+  "common": {
+    "search": "Keyword search",
+    "loading": "Loading…",
+    "save": "Save",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting…",
+    "saving": "Saving…",
+    "noData": "No data",
+    "actions": "Actions"
+  },
+  "app": {
+    "title": "RBAC Template",
+    "home": "Home"
+  },
+  "dashboard": {
+    "welcome": "Welcome to RBAC permission management",
+    "totalUsers": "Total Users",
+    "totalRoles": "Total Roles",
+    "totalPermissions": "Total Permissions",
+    "activeSessions": "Active Sessions",
+    "userActivity": "User Activity Trend",
+    "userActivityDesc": "Users and logins in the last 6 months",
+    "roleDistribution": "Role Distribution",
+    "roleDistributionDesc": "User count by role",
+    "permissionGroups": "Permission Groups",
+    "permissionGroupsDesc": "Permission count per group",
+    "users": "Users",
+    "chartUsers": "Users",
+    "chartLogins": "Logins"
+  },
+  "login": {
+    "title": "Sign in to continue",
+    "requiredUsername": "Please enter username",
+    "username": "Username",
+    "password": "Password",
+    "login": "Sign in",
+    "loggingIn": "Signing in…",
+    "placeholderUsername": "demo",
+    "placeholderPassword": "Any (demo)",
+    "demoHint": "Demo: any username works. Replace with real auth when wiring API."
+  },
+  "auth": {
+    "logout": "Log out",
+    "loggingOut": "Logging out…"
+  },
+  "notifications": {
+    "success": "Success",
+    "createSuccess": "{{resource}} created successfully",
+    "editSuccess": "{{resource}} updated successfully",
+    "deleteSuccess": "{{resource}} deleted successfully",
+    "createError": "Failed to create {{resource}}",
+    "editError": "Failed to update {{resource}}",
+    "deleteError": "Failed to delete {{resource}}",
+    "error": "An error occurred"
+  },
+  "users": {
+    "users": "User",
+    "title": "Users",
+    "name": "Name",
+    "email": "Email",
+    "createTitle": "Create User",
+    "searchPlaceholder": "Search by name or email…",
+    "suggestions": "Suggestions",
+    "noSuggestions": "No matches",
+    "typeToSearch": "Type to search",
+    "searchByKeyword": "Search by keyword \"{{keyword}}\""
+  },
+  "roles": {
+    "roles": "Role",
+    "title": "Roles",
+    "name": "Name",
+    "description": "Description",
+    "createTitle": "Create Role"
+  },
+  "permissions": {
+    "permissions": "Permission",
+    "title": "Permissions",
+    "name": "Name",
+    "code": "Code",
+    "groupId": "Group ID",
+    "createTitle": "Create Permission",
+    "codePlaceholder": "e.g. users:read"
+  },
+  "permissionGroups": {
+    "permissionGroups": "Permission Group",
+    "title": "Permission Groups",
+    "name": "Name",
+    "description": "Description",
+    "createTitle": "Create Permission Group"
+  }
+}
