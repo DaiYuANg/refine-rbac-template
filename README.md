@@ -60,17 +60,17 @@ pnpm preview
 
 ## Scripts
 
-| Command          | Description               |
-| ---------------- | ------------------------- |
-| `pnpm dev`       | Start dev server with MSW |
-| `pnpm build`     | Production build          |
-| `pnpm preview`   | Preview production build  |
-| `pnpm lint`      | Run ESLint                |
-| `pnpm lint:fix`  | Run ESLint with auto-fix  |
-| `pnpm format`    | Format with Prettier      |
-| `pnpm typecheck` | TypeScript check          |
-| `pnpm docker:build` | Build Docker image     |
-| `pnpm docker:run` | Run container (port 8080) |
+| Command             | Description               |
+| ------------------- | ------------------------- |
+| `pnpm dev`          | Start dev server with MSW |
+| `pnpm build`        | Production build          |
+| `pnpm preview`      | Preview production build  |
+| `pnpm lint`         | Run ESLint                |
+| `pnpm lint:fix`     | Run ESLint with auto-fix  |
+| `pnpm format`       | Format with Prettier      |
+| `pnpm typecheck`    | TypeScript check          |
+| `pnpm docker:build` | Build Docker image        |
+| `pnpm docker:run`   | Run container (port 8080) |
 
 ## Project Structure
 

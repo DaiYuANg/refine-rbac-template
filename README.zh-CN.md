@@ -60,17 +60,17 @@ pnpm preview
 
 ## 脚本
 
-| 命令             | 说明                   |
-| ---------------- | ---------------------- |
-| `pnpm dev`       | 启动开发服务（含 MSW） |
-| `pnpm build`     | 生产构建               |
-| `pnpm preview`   | 预览生产构建           |
-| `pnpm lint`      | 运行 ESLint            |
-| `pnpm lint:fix`  | ESLint 自动修复        |
-| `pnpm format`    | Prettier 格式化        |
-| `pnpm typecheck` | TypeScript 检查        |
-| `pnpm docker:build` | 构建 Docker 镜像   |
-| `pnpm docker:run` | 运行容器（端口 8080）  |
+| 命令                | 说明                   |
+| ------------------- | ---------------------- |
+| `pnpm dev`          | 启动开发服务（含 MSW） |
+| `pnpm build`        | 生产构建               |
+| `pnpm preview`      | 预览生产构建           |
+| `pnpm lint`         | 运行 ESLint            |
+| `pnpm lint:fix`     | ESLint 自动修复        |
+| `pnpm format`       | Prettier 格式化        |
+| `pnpm typecheck`    | TypeScript 检查        |
+| `pnpm docker:build` | 构建 Docker 镜像       |
+| `pnpm docker:run`   | 运行容器（端口 8080）  |
 
 ## 项目结构
 
