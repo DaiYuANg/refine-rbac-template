@@ -194,6 +194,108 @@ Endpoints like `/me`, `/dashboard/stats` are called via `dataProvider.custom`. R
 
 ---
 
+### Backend Business Adaptation Rules
+
+This section documents the **business-specific** API expectations for this RBAC template. Backend implementers must provide these endpoints and structures for full feature parity.
+
+#### 1. Auth & Current User — `GET /me`
+
+**Required.** Called after login to load identity, roles, and permissions. Used by `authProvider.getIdentity` and `getPermissions`.
+
+**Request**: `GET {apiBaseUrl}/me` with `Authorization: Bearer {token}`
+
+**Response** (`MeResponse`):
+
+```ts
+{
+  id: string
+  name: string
+  email?: string
+  roles: { id: string; name: string }[]
+  permissions: string[]   // e.g. ["users:read", "users:write", "roles:read", ...]
+}
+```
+
+- `roles`: At least `{ id, name }`. Role name `admin` or `管理员` bypasses all permission checks.
+- `permissions`: Array of permission codes (see RBAC mapping below).
+
+#### 2. Dashboard Stats — `GET /dashboard/stats`
+
+**Optional.** Powers the dashboard page charts and stat cards.
+
+**Request**: `GET {apiBaseUrl}/dashboard/stats`
+
+**Response**:
+
+```ts
+{
+  statCards: {
+    key: string
+    value: number
+    labelKey: string
+  }
+  ;[]
+  userActivity: {
+    month: string
+    users: number
+    logins: number
+  }
+  ;[]
+  roleDistribution: {
+    name: string
+    value: number
+    color: string
+  }
+  ;[]
+  permissionGroups: {
+    name: string
+    count: number
+  }
+  ;[]
+}
+```
+
+- `statCards.labelKey`: i18n key (e.g. `dashboard.totalUsers`).
+- `roleDistribution.color`: CSS color (e.g. `var(--chart-1)` or hex).
+
+#### 3. Resource Paths & Field Schemas
+
+| Resource          | Path                 | Key Fields                                     |
+| ----------------- | -------------------- | ---------------------------------------------- |
+| Users             | `/users`             | `id`, `email`, `name`, `createdAt?`            |
+| Roles             | `/roles`             | `id`, `name`, `description?`, `createdAt?`     |
+| Permissions       | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?` |
+| Permission Groups | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`     |
+
+- All resources use `id: string` as primary key.
+- List filters: users support `q`, `name_like`, `email_like`; others follow generic `field_eq`, `field_like`, etc. from the API spec.
+- Sort: generic `sort` + `order` query params.
+
+#### 4. RBAC Permission Code Mapping
+
+Frontend maps resource+action to permission codes as follows:
+
+| Resource          | list, show               | create, edit, delete      |
+| ----------------- | ------------------------ | ------------------------- |
+| users             | `users:read`             | `users:write`             |
+| roles             | `roles:read`             | `roles:write`             |
+| permissions       | `permissions:read`       | `permissions:write`       |
+| permission-groups | `permission-groups:read` | `permission-groups:write` |
+
+- Backend `/me` must return permission codes in this format (e.g. `users:read`, `users:write`).
+- Role name `admin` or `管理员` → full access regardless of permissions.
+- Unmapped resources (e.g. dashboard) default to allowed.
+
+#### 5. Login Flow (Optional)
+
+The template ships with a mock login (no backend call). To integrate with a real backend:
+
+- Implement a login endpoint (e.g. `POST /auth/login`) accepting credentials and returning a JWT or session token.
+- Adapt `authProvider.login` in `src/providers/auth-provider` to call that endpoint and store the token.
+- The token is sent as `Authorization: Bearer {token}` on subsequent requests (including `/me`).
+
+---
+
 ### Data Provider Specification
 
 #### Standard Data Structures

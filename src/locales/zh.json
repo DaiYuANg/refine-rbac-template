@@ -118,5 +118,13 @@
     "name": "名称",
     "description": "描述",
     "createTitle": "新建权限组"
+  },
+  "fileUpload": {
+    "placeholder": "拖拽文件到此处，或点击选择",
+    "placeholderMultiple": "拖拽文件到此处，或点击选择",
+    "maxSize": "最大 {{size}}",
+    "sizeLimitExceeded": "超过大小限制 {{size}}",
+    "md5Error": "MD5 计算失败",
+    "remove": "移除"
   }
 }

@@ -11,7 +11,6 @@ import type { CurrentUserPermissions } from './types'
 export interface IdentityData {
   id: string
   name: string
-  avatar?: string
 }
 
 interface AuthState extends CurrentUserPermissions {
@@ -21,7 +20,6 @@ interface AuthState extends CurrentUserPermissions {
     permissions: CurrentUserPermissions['permissions']
     id: string
     name: string
-    avatar?: string
   }) => void
   clear: () => void
 }
@@ -43,7 +41,7 @@ export const useAuthStore = create<AuthState>()(
           set({
             roles: data.roles,
             permissions: data.permissions,
-            identity: { id: data.id, name: data.name, avatar: data.avatar },
+            identity: { id: data.id, name: data.name },
           }),
         clear: () => set({ ...emptyState }),
       }),

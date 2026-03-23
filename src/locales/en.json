@@ -118,5 +118,13 @@
     "name": "Name",
     "description": "Description",
     "createTitle": "Create Permission Group"
+  },
+  "fileUpload": {
+    "placeholder": "Drag and drop files here, or click to select",
+    "placeholderMultiple": "Drag and drop files here, or click to select",
+    "maxSize": "Max {{size}}",
+    "sizeLimitExceeded": "Size limit exceeded ({{size}})",
+    "md5Error": "MD5 computation failed",
+    "remove": "Remove"
   }
 }

@@ -8,7 +8,6 @@ export interface MeResponse {
   id: string
   name: string
   email?: string
-  avatar?: string
   roles: RoleInfo[]
   permissions: string[]
 }

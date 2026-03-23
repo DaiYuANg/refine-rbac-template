@@ -194,6 +194,108 @@ src/
 
 ---
 
+### 后端业务适配规则
+
+本节说明本 RBAC 模板的**业务侧** API 约定。后端实现需按以下结构提供接口，才能完整对接功能。
+
+#### 1. 认证与当前用户 — `GET /me`
+
+**必选**。登录后用于获取身份、角色和权限，供 `authProvider.getIdentity` 与 `getPermissions` 使用。
+
+**请求**：`GET {apiBaseUrl}/me`，Header 携带 `Authorization: Bearer {token}`
+
+**响应**（`MeResponse`）：
+
+```ts
+{
+  id: string
+  name: string
+  email?: string
+  roles: { id: string; name: string }[]
+  permissions: string[]   // 如 ["users:read", "users:write", "roles:read", ...]
+}
+```
+
+- `roles`：至少包含 `{ id, name }`。角色名为 `admin` 或 `管理员` 时跳过所有权限校验。
+- `permissions`：权限码数组，格式见下方 RBAC 映射。
+
+#### 2. 仪表盘统计 — `GET /dashboard/stats`
+
+**可选**。用于仪表盘页的统计卡片与图表。
+
+**请求**：`GET {apiBaseUrl}/dashboard/stats`
+
+**响应**：
+
+```ts
+{
+  statCards: {
+    key: string
+    value: number
+    labelKey: string
+  }
+  ;[]
+  userActivity: {
+    month: string
+    users: number
+    logins: number
+  }
+  ;[]
+  roleDistribution: {
+    name: string
+    value: number
+    color: string
+  }
+  ;[]
+  permissionGroups: {
+    name: string
+    count: number
+  }
+  ;[]
+}
+```
+
+- `statCards.labelKey`：i18n 键名，如 `dashboard.totalUsers`。
+- `roleDistribution.color`：CSS 颜色，如 `var(--chart-1)` 或十六进制。
+
+#### 3. 资源路径与字段结构
+
+| 资源   | 路径                 | 核心字段                                       |
+| ------ | -------------------- | ---------------------------------------------- |
+| 用户   | `/users`             | `id`, `email`, `name`, `createdAt?`            |
+| 角色   | `/roles`             | `id`, `name`, `description?`, `createdAt?`     |
+| 权限   | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?` |
+| 权限组 | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`     |
+
+- 主键统一为 `id: string`。
+- 列表筛选：用户支持 `q`、`name_like`、`email_like`；其余按 API 规范使用 `field_eq`、`field_like` 等。
+- 排序：统一使用 `sort`、`order` 查询参数。
+
+#### 4. RBAC 权限码映射
+
+前端将「资源 + 操作」映射为权限码：
+
+| 资源              | list / show              | create / edit / delete    |
+| ----------------- | ------------------------ | ------------------------- |
+| users             | `users:read`             | `users:write`             |
+| roles             | `roles:read`             | `roles:write`             |
+| permissions       | `permissions:read`       | `permissions:write`       |
+| permission-groups | `permission-groups:read` | `permission-groups:write` |
+
+- 后端 `/me` 需返回上述格式的权限码（如 `users:read`、`users:write`）。
+- 角色名为 `admin` 或 `管理员` 时，不受权限限制。
+- 未映射的资源（如 dashboard）默认放行。
+
+#### 5. 登录流程（可选）
+
+模板默认使用 mock 登录，不请求后端。对接真实后端时：
+
+- 实现登录接口（如 `POST /auth/login`），接收用户名/密码，返回 JWT 或 session token。
+- 修改 `src/providers/auth-provider` 中的 `authProvider.login`，调用该接口并保存 token。
+- 后续请求（含 `/me`）通过 `Authorization: Bearer {token}` 携带 token。
+
+---
+
 ### Data Provider 规范
 
 #### 标准数据结构

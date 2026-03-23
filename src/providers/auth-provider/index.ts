@@ -25,7 +25,6 @@ async function fetchMeAndPopulateStore(): Promise<MeResponse | null> {
         permissions: data.permissions ?? [],
         id: data.id,
         name: data.name,
-        avatar: data.avatar,
       })
       return data
     })
@@ -77,7 +76,7 @@ export const authProvider: AuthProvider = {
     await fetchMeAndPopulateStore()
     const identity = useAuthStore.getState().identity
     if (identity) return identity
-    return { id: '1', name: 'Demo User', avatar: undefined }
+    return { id: '1', name: 'Demo User' }
   },
   getPermissions: async () => {
     await fetchMeAndPopulateStore()

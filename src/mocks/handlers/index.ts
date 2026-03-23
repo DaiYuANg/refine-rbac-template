@@ -128,7 +128,6 @@ export const handlers = [
       id: '1',
       name: 'Demo User',
       email: 'demo@example.com',
-      avatar: undefined,
       roles: [{ id: '1', name: '管理员' }],
       permissions: [
         'users:read',
@@ -199,13 +198,11 @@ export const handlers = [
     const body = (await request.json()) as {
       email: string
       name: string
-      avatar?: string
     }
     const user = {
       id: String(users.length + 1),
       email: body.email ?? '',
       name: body.name ?? '',
-      avatar: body.avatar,
       createdAt: new Date().toISOString(),
     }
     users.push(user)
@@ -218,7 +215,6 @@ export const handlers = [
     const body = (await request.json()) as Partial<{
       email: string
       name: string
-      avatar: string
     }>
     users[idx] = { ...users[idx], ...body }
     return HttpResponse.json(users[idx])
@@ -233,7 +229,7 @@ export const handlers = [
 
   http.post(`${API_BASE}/users/bulk`, async ({ request }) => {
     const body = (await request.json()) as {
-      items?: { email?: string; name?: string; avatar?: string }[]
+      items?: { email?: string; name?: string }[]
     }
     const items = body?.items ?? []
     const created = items.map((item, i) => {
@@ -241,7 +237,6 @@ export const handlers = [
         id: String(users.length + i + 1),
         email: item.email ?? '',
         name: item.name ?? '',
-        avatar: item.avatar,
         createdAt: new Date().toISOString(),
       }
       users.push(user)
