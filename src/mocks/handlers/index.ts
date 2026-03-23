@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { env } from '@/config'
+import { shouldSimulate401 } from '@/mocks/mock-auth'
 import { MOCK_USERS } from '@/mocks/fixtures/users'
 import { MOCK_ROLES } from '@/mocks/fixtures/roles'
 import { MOCK_PERMISSIONS } from '@/mocks/fixtures/permissions'
@@ -35,6 +36,9 @@ function createCrudHandlers<T extends { id: string }>(
 ) {
   return [
     http.get(`${API_BASE}${path}`, ({ request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const url = new URL(request.url)
       const page = parseInt(url.searchParams.get('page') ?? '1', 10)
       const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
@@ -44,12 +48,18 @@ function createCrudHandlers<T extends { id: string }>(
         pageResponse(slice, store.length, page, pageSize)
       )
     }),
-    http.get(`${API_BASE}${path}/:id`, ({ params }) => {
+    http.get(`${API_BASE}${path}/:id`, ({ request, params }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const item = store.find((u) => u.id === params.id)
       if (!item) return new HttpResponse(null, { status: 404 })
       return HttpResponse.json(item)
     }),
     http.post(`${API_BASE}${path}`, async ({ request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const body = (await request.json()) as Record<string, unknown>
       const item = {
         ...defaultFields,
@@ -61,19 +71,28 @@ function createCrudHandlers<T extends { id: string }>(
       return HttpResponse.json(item, { status: 201 })
     }),
     http.patch(`${API_BASE}${path}/:id`, async ({ params, request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const idx = store.findIndex((u) => u.id === params.id)
       if (idx === -1) return new HttpResponse(null, { status: 404 })
       const body = (await request.json()) as Partial<T>
       store[idx] = { ...store[idx], ...body }
       return HttpResponse.json(store[idx])
     }),
-    http.delete(`${API_BASE}${path}/:id`, ({ params }) => {
+    http.delete(`${API_BASE}${path}/:id`, ({ params, request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const idx = store.findIndex((u) => u.id === params.id)
       if (idx === -1) return new HttpResponse(null, { status: 404 })
       store.splice(idx, 1)
       return new HttpResponse(null, { status: 200 })
     }),
     http.post(`${API_BASE}${path}/bulk`, async ({ request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const body = (await request.json()) as {
         items?: Record<string, unknown>[]
       }
@@ -91,6 +110,9 @@ function createCrudHandlers<T extends { id: string }>(
       return HttpResponse.json(created, { status: 201 })
     }),
     http.patch(`${API_BASE}${path}/bulk`, async ({ request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const url = new URL(request.url)
       const ids = url.searchParams.get('id')?.split(',') ?? []
       const body = (await request.json()) as Partial<T>
@@ -105,6 +127,9 @@ function createCrudHandlers<T extends { id: string }>(
       return HttpResponse.json(updated)
     }),
     http.delete(`${API_BASE}${path}`, ({ request }) => {
+      if (shouldSimulate401(request)) {
+        return new HttpResponse(null, { status: 401 })
+      }
       const url = new URL(request.url)
       const idParam = url.searchParams.get('id')
       if (!idParam) return new HttpResponse(null, { status: 400 })
@@ -123,7 +148,16 @@ function createCrudHandlers<T extends { id: string }>(
 }
 
 export const handlers = [
-  http.get(`${API_BASE}/me`, () => {
+  http.post(`${API_BASE}/auth/refresh`, () => {
+    return HttpResponse.json({
+      accessToken: `mock-jwt-token-${Date.now()}`,
+    })
+  }),
+
+  http.get(`${API_BASE}/me`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     return HttpResponse.json({
       id: '1',
       name: 'Demo User',
@@ -142,7 +176,10 @@ export const handlers = [
     })
   }),
 
-  http.get(`${API_BASE}/dashboard/stats`, () => {
+  http.get(`${API_BASE}/dashboard/stats`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     return HttpResponse.json({
       statCards: DASHBOARD_STAT_CARDS,
       userActivity: DASHBOARD_USER_ACTIVITY,
@@ -153,6 +190,9 @@ export const handlers = [
 
   // Users CRUD - README backend API (page, pageSize, PageResponse)
   http.get(`${API_BASE}/users`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') ?? '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
@@ -186,7 +226,10 @@ export const handlers = [
     )
   }),
 
-  http.get(`${API_BASE}/users/:id`, ({ params }) => {
+  http.get(`${API_BASE}/users/:id`, ({ params, request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const user = users.find((u) => u.id === params.id)
     if (!user) {
       return new HttpResponse(null, { status: 404 })
@@ -195,6 +238,9 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/users`, async ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const body = (await request.json()) as {
       email: string
       name: string
@@ -210,6 +256,9 @@ export const handlers = [
   }),
 
   http.patch(`${API_BASE}/users/:id`, async ({ params, request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const idx = users.findIndex((u) => u.id === params.id)
     if (idx === -1) return new HttpResponse(null, { status: 404 })
     const body = (await request.json()) as Partial<{
@@ -220,7 +269,10 @@ export const handlers = [
     return HttpResponse.json(users[idx])
   }),
 
-  http.delete(`${API_BASE}/users/:id`, ({ params }) => {
+  http.delete(`${API_BASE}/users/:id`, ({ params, request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const idx = users.findIndex((u) => u.id === params.id)
     if (idx === -1) return new HttpResponse(null, { status: 404 })
     users.splice(idx, 1)
@@ -228,6 +280,9 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/users/bulk`, async ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const body = (await request.json()) as {
       items?: { email?: string; name?: string }[]
     }
@@ -245,6 +300,9 @@ export const handlers = [
     return HttpResponse.json(created, { status: 201 })
   }),
   http.patch(`${API_BASE}/users/bulk`, async ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const url = new URL(request.url)
     const ids = url.searchParams.get('id')?.split(',') ?? []
     const body = (await request.json()) as Partial<{
@@ -262,6 +320,9 @@ export const handlers = [
     return HttpResponse.json(updated)
   }),
   http.delete(`${API_BASE}/users`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
     const url = new URL(request.url)
     const idParam = url.searchParams.get('id')
     if (!idParam) return new HttpResponse(null, { status: 400 })

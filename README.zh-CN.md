@@ -102,10 +102,11 @@ src/
 
 所有环境变量通过 `src/config` 统一访问：
 
-| 变量            | 默认值 | 说明                        |
-| --------------- | ------ | --------------------------- |
-| `VITE_API_URL`  | `/api` | API 根路径                  |
-| `VITE_USE_MOCK` | (dev)  | `true` 时构建环境也可用 MSW |
+| 变量                    | 默认值                         | 说明                        |
+| ----------------------- | ------------------------------ | --------------------------- |
+| `VITE_API_URL`          | `/api`                         | API 根路径                  |
+| `VITE_AUTH_REFRESH_URL` | `${VITE_API_URL}/auth/refresh` | Refresh token 接口地址      |
+| `VITE_USE_MOCK`         | (dev)                          | `true` 时构建环境也可用 MSW |
 
 ---
 
@@ -293,6 +294,26 @@ src/
 - 实现登录接口（如 `POST /auth/login`），接收用户名/密码，返回 JWT 或 session token。
 - 修改 `src/providers/auth-provider` 中的 `authProvider.login`，调用该接口并保存 token。
 - 后续请求（含 `/me`）通过 `Authorization: Bearer {token}` 携带 token。
+
+#### 6. Refresh Token（基于 Cookie）
+
+当 access token 过期（接口返回 401）时，前端使用 refresh token 获取新的 access token 并重试失败的请求。
+
+**流程**：
+
+1. 请求返回 401 → 前端调用 `POST /auth/refresh`，携带 `credentials: 'include'`（发送 httpOnly cookie）。
+2. 后端校验 cookie 中的 refresh token，返回新的 `accessToken`。
+3. 前端更新 session 并重试原请求。
+4. 若 refresh 返回 401 → 登出并跳转登录页。
+
+**并发**：多个 401 共享一次 refresh 请求，所有等待者获得新 token 后重试。
+
+**后端约定**：
+
+- **接口**：`POST {apiBaseUrl}/auth/refresh`（可通过 `VITE_AUTH_REFRESH_URL` 覆盖）
+- **请求**：Cookie 携带 refresh token（httpOnly，由登录接口设置）
+- **响应 200**：`{ accessToken: string }`
+- **响应 401**：refresh token 过期 → 前端登出
 
 ---
 

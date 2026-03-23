@@ -60,21 +60,37 @@ pnpm preview
 
 ## Scripts
 
-| Command             | Description               |
-| ------------------- | ------------------------- |
-| `pnpm dev`          | Start dev server with MSW |
-| `pnpm build`        | Production build          |
-| `pnpm preview`      | Preview production build  |
-| `pnpm lint`         | Run ESLint                |
-| `pnpm lint:fix`     | Run ESLint with auto-fix  |
-| `pnpm format`       | Format with Prettier      |
-| `pnpm typecheck`    | TypeScript check          |
-| `pnpm docker:build` | Build Docker image        |
-| `pnpm docker:run`   | Run container (port 8080) |
+| Command                 | Description               |
+| ----------------------- | ------------------------- |
+| `pnpm dev`              | Start dev server with MSW |
+| `pnpm build`            | Production build          |
+| `pnpm preview`          | Preview production build  |
+| `pnpm lint`             | Run ESLint                |
+| `pnpm lint:fix`         | Run ESLint with auto-fix  |
+| `pnpm format`           | Format with Prettier      |
+| `pnpm typecheck`        | TypeScript check          |
+| `pnpm docker:build`     | Build Docker image        |
+| `pnpm docker:run`       | Run container (port 8080) |
+| `pnpm test:e2e`         | Run Playwright E2E tests  |
+| `pnpm test:e2e:ui`      | E2E tests with UI mode    |
+| `pnpm test:e2e:install` | Install Chromium for E2E  |
+
+### E2E Testing (Playwright)
+
+Run end-to-end tests with Playwright. Uses MSW mock API (`VITE_USE_MOCK=true`).
+
+```bash
+pnpm test:e2e:install   # One-time: install Chromium
+pnpm test:e2e           # Run tests
+pnpm test:e2e:ui        # Run with interactive UI
+```
+
+Tests live in `e2e/`. The dev server starts automatically with mock mode during test runs.
 
 ## Project Structure
 
 ```
+e2e/                 # Playwright E2E tests
 src/
 ├── components/
 │   ├── ui/           # shadcn/ui primitives
@@ -102,10 +118,12 @@ src/
 
 All env access goes through `src/config`:
 
-| Variable        | Default | Description                   |
-| --------------- | ------- | ----------------------------- |
-| `VITE_API_URL`  | `/api`  | API base URL                  |
-| `VITE_USE_MOCK` | (dev)   | `true` to enable MSW in build |
+| Variable                | Default                        | Description                   |
+| ----------------------- | ------------------------------ | ----------------------------- |
+| `VITE_API_URL`          | `/api`                         | API base URL                  |
+| `VITE_AUTH_REFRESH_URL` | `${VITE_API_URL}/auth/refresh` | Refresh token endpoint        |
+| `VITE_USE_MOCK`         | (dev)                          | `true` to enable MSW in build |
+| `VITE_MOCK_401_PROB`    | `0.15`                         | E2E: set `0` for stable tests |
 
 ---
 
@@ -293,6 +311,26 @@ The template ships with a mock login (no backend call). To integrate with a real
 - Implement a login endpoint (e.g. `POST /auth/login`) accepting credentials and returning a JWT or session token.
 - Adapt `authProvider.login` in `src/providers/auth-provider` to call that endpoint and store the token.
 - The token is sent as `Authorization: Bearer {token}` on subsequent requests (including `/me`).
+
+#### 6. Refresh Token (Cookie-Based)
+
+When the access token expires (API returns 401), the frontend uses the refresh token to obtain a new access token and retries the failed request.
+
+**Flow**:
+
+1. Request returns 401 → frontend calls `POST /auth/refresh` with `credentials: 'include'` (sends httpOnly cookie).
+2. Backend validates refresh token from cookie, returns new `accessToken` in JSON body.
+3. Frontend updates session store and retries the original request.
+4. If refresh returns 401 → logout and redirect to login.
+
+**Concurrency**: Multiple concurrent 401s share one refresh request; all waiters get the new token and retry.
+
+**Backend contract**:
+
+- **Endpoint**: `POST {apiBaseUrl}/auth/refresh` (override via `VITE_AUTH_REFRESH_URL`)
+- **Request**: Cookie header with refresh token (httpOnly, set by login)
+- **Response 200**: `{ accessToken: string }`
+- **Response 401**: Refresh token expired → frontend logs out
 
 ---
 
