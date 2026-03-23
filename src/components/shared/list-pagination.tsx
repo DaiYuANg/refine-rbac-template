@@ -1,14 +1,13 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from '@/components/ui/pagination'
 import {
   DropdownMenu,
@@ -82,28 +81,58 @@ export function ListPagination({
       <Pagination className="mx-0 w-auto justify-end">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious
-              text={t('pagination.previous')}
-              onClick={() => canPrev && onPageChange(currentPage - 1)}
-              disabled={!canPrev}
-            />
+            <PaginationLink
+              size="default"
+              aria-label={t('pagination.previous')}
+              aria-disabled={!canPrev}
+              className={cn(
+                'gap-1 px-2.5 sm:pl-2.5',
+                !canPrev && 'pointer-events-none opacity-50'
+              )}
+              onClick={(e) => {
+                if (!canPrev) e.preventDefault()
+                else onPageChange(currentPage - 1)
+              }}
+              href="#"
+            >
+              <ChevronLeft className="size-4" />
+              <span className="hidden sm:inline">
+                {t('pagination.previous')}
+              </span>
+            </PaginationLink>
           </PaginationItem>
           {pages.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
                 isActive={page === currentPage}
-                onClick={() => onPageChange(page)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  onPageChange(page)
+                }}
+                href="#"
               >
                 {page}
               </PaginationLink>
             </PaginationItem>
           ))}
           <PaginationItem>
-            <PaginationNext
-              text={t('pagination.next')}
-              onClick={() => canNext && onPageChange(currentPage + 1)}
-              disabled={!canNext}
-            />
+            <PaginationLink
+              size="default"
+              aria-label={t('pagination.next')}
+              aria-disabled={!canNext}
+              className={cn(
+                'gap-1 px-2.5 sm:pr-2.5',
+                !canNext && 'pointer-events-none opacity-50'
+              )}
+              onClick={(e) => {
+                if (!canNext) e.preventDefault()
+                else onPageChange(currentPage + 1)
+              }}
+              href="#"
+            >
+              <span className="hidden sm:inline">{t('pagination.next')}</span>
+              <ChevronRight className="size-4" />
+            </PaginationLink>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

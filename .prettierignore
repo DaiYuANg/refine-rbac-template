@@ -3,3 +3,7 @@ node_modules
 pnpm-lock.yaml
 *.min.js
 public/mockServiceWorker.js
+
+# External/integration components (shadcn/ui, refine-ui)
+src/components/ui
+src/components/refine-ui

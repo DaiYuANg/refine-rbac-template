@@ -7,7 +7,13 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import type { Linter } from 'eslint'
 
 export default defineConfig([
-  globalIgnores(['dist', 'public/mockServiceWorker.js']),
+  globalIgnores([
+    'dist',
+    'public/mockServiceWorker.js',
+    // External/integration components: shadcn/ui, refine-ui
+    'src/components/ui/**',
+    'src/components/refine-ui/**',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -19,20 +25,6 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-    },
-  },
-  // External/integration components: refine-ui, shadcn (components/ui)
-  // Avoid modifying upstream patterns; disable strict rules for these dirs
-  {
-    files: [
-      'src/components/refine-ui/**/*.{ts,tsx}',
-      'src/components/ui/**/*.{ts,tsx}',
-    ],
-    rules: {
-      'react-refresh/only-export-components': 'off',
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/static-components': 'off',
-      'react-hooks/purity': 'off',
     },
   },
 ])

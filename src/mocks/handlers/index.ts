@@ -205,8 +205,7 @@ export const handlers = [
     /** ~5% chance to simulate network/server failure (mock only). Set VITE_MOCK_HEALTH_FAIL_PROB=0 in E2E. */
     const prob = parseFloat(
       (import.meta.env.VITE_MOCK_HEALTH_FAIL_PROB as string | undefined) ??
-        '0.05',
-      10
+        '0.05'
     )
     if (Math.random() < prob) {
       return new HttpResponse(null, { status: 503 })
