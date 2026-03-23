@@ -6,6 +6,7 @@ import {
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
 import { UserListFilter } from '@/components/refine-ui/table/user-list-filter'
+import { ListPagination } from '@/components/shared/list-pagination'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -24,21 +25,34 @@ import type { User } from '@/types/user'
 export function UserList() {
   const { t } = useTranslation()
   const [filters, setFilters] = useState<CrudFilters>([])
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10 })
+
+  const handleFiltersChange = (newFilters: CrudFilters) => {
+    setFilters(newFilters)
+    setPagination((p) => ({ ...p, currentPage: 1 }))
+  }
 
   const { query, result } = useList<User>({
     resource: 'users',
-    pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    pagination: {
+      ...pagination,
+      mode: 'server',
+    },
     filters,
   })
 
   const users = Array.isArray(result?.data) ? result.data : []
+  const total = result?.total ?? 0
   const isLoading = query.isLoading
 
   return (
     <ListView>
       <ListViewHeader resource="users" />
       <div className="flex flex-col gap-4">
-        <UserListFilter filters={filters} onFiltersChange={setFilters} />
+        <UserListFilter
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+        />
       </div>
       <div className="rounded-md border">
         {isLoading ? (
@@ -114,6 +128,16 @@ export function UserList() {
             </TableBody>
           </Table>
         )}
+      </div>
+      <div className="mt-4">
+        <ListPagination
+          currentPage={pagination.currentPage}
+          total={total}
+          pageSize={pagination.pageSize}
+          onPageChange={(page) =>
+            setPagination((p) => ({ ...p, currentPage: page }))
+          }
+        />
       </div>
     </ListView>
   )

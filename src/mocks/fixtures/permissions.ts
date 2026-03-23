@@ -1,5 +1,27 @@
 import type { Permission } from '@/types/permission'
 
+const extraPerms = [
+  { name: '删除用户', code: 'users:delete', groupId: '1' },
+  { name: '导出用户', code: 'users:export', groupId: '1' },
+  { name: '删除角色', code: 'roles:delete', groupId: '2' },
+  { name: '分配角色', code: 'roles:assign', groupId: '2' },
+  { name: '删除权限', code: 'permissions:delete', groupId: '3' },
+  { name: '查看权限组', code: 'permission-groups:read', groupId: '3' },
+  { name: '编辑权限组', code: 'permission-groups:write', groupId: '3' },
+  { name: '系统配置读取', code: 'settings:read', groupId: '4' },
+  { name: '系统配置修改', code: 'settings:write', groupId: '4' },
+  { name: '查看日志', code: 'logs:read', groupId: '5' },
+  { name: '导出日志', code: 'logs:export', groupId: '5' },
+  { name: '导出报表', code: 'reports:export', groupId: '6' },
+  { name: 'API 读取', code: 'api:read', groupId: '7' },
+  { name: 'API 写入', code: 'api:write', groupId: '7' },
+  { name: '文件上传', code: 'files:upload', groupId: '8' },
+  { name: '文件下载', code: 'files:download', groupId: '8' },
+  { name: '发送通知', code: 'notifications:send', groupId: '9' },
+  { name: '审批流程', code: 'workflow:approve', groupId: '10' },
+  { name: '查看仪表盘', code: 'dashboard:read', groupId: '11' },
+]
+
 export const MOCK_PERMISSIONS: Permission[] = [
   {
     id: '1',
@@ -43,4 +65,11 @@ export const MOCK_PERMISSIONS: Permission[] = [
     groupId: '3',
     createdAt: '2024-02-20T14:30:00Z',
   },
+  ...extraPerms.map((p, i) => ({
+    id: String(i + 7),
+    name: p.name,
+    code: p.code,
+    groupId: p.groupId,
+    createdAt: '2024-02-20T14:30:00Z',
+  })),
 ]

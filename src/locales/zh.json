@@ -25,6 +25,12 @@
     "list": "列表",
     "notAccessTitle": "无访问权限"
   },
+  "pagination": {
+    "noItems": "暂无数据",
+    "range": "第 {{from}}–{{to}} 条，共 {{total}} 条",
+    "previous": "上一页",
+    "next": "下一页"
+  },
   "common": {
     "search": "关键字搜索",
     "loading": "加载中…",
@@ -124,7 +130,8 @@
     "suggestions": "匹配结果",
     "noSuggestions": "无匹配",
     "typeToSearch": "输入以搜索",
-    "searchByKeyword": "按「{{keyword}}」关键字查询"
+    "searchByKeyword": "按「{{keyword}}」关键字查询",
+    "belongsToGroup": "所属权限组"
   },
   "permissionGroups": {
     "searchPlaceholder": "按名称或描述搜索…",

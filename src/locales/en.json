@@ -25,6 +25,12 @@
     "list": "List",
     "notAccessTitle": "You don't have permission to access"
   },
+  "pagination": {
+    "noItems": "No items",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
+  },
   "common": {
     "search": "Keyword search",
     "loading": "Loading…",
@@ -124,7 +130,8 @@
     "suggestions": "Suggestions",
     "noSuggestions": "No matches",
     "typeToSearch": "Type to search",
-    "searchByKeyword": "Search by keyword \"{{keyword}}\""
+    "searchByKeyword": "Search by keyword \"{{keyword}}\"",
+    "belongsToGroup": "Permission group"
   },
   "permissionGroups": {
     "permissionGroups": "Permission Group",

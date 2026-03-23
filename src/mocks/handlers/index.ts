@@ -40,6 +40,17 @@ function createCrudHandlers<T extends { id: string }>(
         return new HttpResponse(null, { status: 401 })
       }
       const url = new URL(request.url)
+      const idParam = url.searchParams.get('id')
+      if (idParam) {
+        const ids = idParam
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+        const items = ids
+          .map((id) => store.find((x) => x.id === id))
+          .filter((x): x is T => x != null)
+        return HttpResponse.json(items)
+      }
       const page = parseInt(url.searchParams.get('page') ?? '1', 10)
       const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
       const start = (page - 1) * pageSize
@@ -194,6 +205,17 @@ export const handlers = [
       return new HttpResponse(null, { status: 401 })
     }
     const url = new URL(request.url)
+    const idParam = url.searchParams.get('id')
+    if (idParam) {
+      const ids = idParam
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const items = ids
+        .map((id) => users.find((u) => u.id === id))
+        .filter((x): x is (typeof users)[number] => x != null)
+      return HttpResponse.json(items)
+    }
     const page = parseInt(url.searchParams.get('page') ?? '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
 
@@ -348,6 +370,17 @@ export const handlers = [
       return new HttpResponse(null, { status: 401 })
     }
     const url = new URL(request.url)
+    const idParam = url.searchParams.get('id')
+    if (idParam) {
+      const ids = idParam
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const items = ids
+        .map((id) => roles.find((r) => r.id === id))
+        .filter((x): x is (typeof roles)[number] => x != null)
+      return HttpResponse.json(items)
+    }
     const page = parseInt(url.searchParams.get('page') ?? '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
     const q = url.searchParams.get('q')?.trim()
@@ -376,6 +409,17 @@ export const handlers = [
       return new HttpResponse(null, { status: 401 })
     }
     const url = new URL(request.url)
+    const idParam = url.searchParams.get('id')
+    if (idParam) {
+      const ids = idParam
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const items = ids
+        .map((id) => permissions.find((p) => p.id === id))
+        .filter((x): x is (typeof permissions)[number] => x != null)
+      return HttpResponse.json(items)
+    }
     const page = parseInt(url.searchParams.get('page') ?? '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
     const groupIdEq = url.searchParams.get('groupId_eq')?.trim()
@@ -450,6 +494,17 @@ export const handlers = [
       return new HttpResponse(null, { status: 401 })
     }
     const url = new URL(request.url)
+    const idParam = url.searchParams.get('id')
+    if (idParam) {
+      const ids = idParam
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const items = ids
+        .map((id) => permissionGroups.find((g) => g.id === id))
+        .filter((x): x is (typeof permissionGroups)[number] => x != null)
+      return HttpResponse.json(items)
+    }
     const page = parseInt(url.searchParams.get('page') ?? '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
     const q = url.searchParams.get('q')?.trim()

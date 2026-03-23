@@ -1,4 +1,5 @@
-import { useShow } from '@refinedev/core'
+import { Link } from 'react-router-dom'
+import { useOne, useShow } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
   ShowView,
@@ -6,12 +7,24 @@ import {
 } from '@/components/refine-ui/views/show-view'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Permission } from '@/types/permission'
+import type { PermissionGroup } from '@/types/permission-group'
 
 export function PermissionShow() {
   const { t } = useTranslation()
   const { query } = useShow<Permission>({ resource: 'permissions' })
   const perm = query?.data?.data
   const isLoading = query?.isLoading ?? false
+
+  const groupId = perm?.groupId ?? null
+  const { data: groupData, isLoading: isGroupLoading } =
+    useOne<PermissionGroup>({
+      resource: 'permission-groups',
+      id: groupId ?? '',
+      queryOptions: {
+        enabled: !!groupId,
+      },
+    })
+  const group = groupData?.data
 
   if (isLoading || !perm) {
     return (
@@ -42,12 +55,27 @@ export function PermissionShow() {
           </dt>
           <dd className="mt-1 font-mono text-sm">{perm.code}</dd>
         </div>
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('permissions.groupId')}
-          </dt>
-          <dd className="mt-1">{perm.groupId ?? '-'}</dd>
-        </div>
+        {groupId && (
+          <div>
+            <dt className="text-sm font-medium text-muted-foreground">
+              {t('permissions.belongsToGroup')}
+            </dt>
+            <dd className="mt-1">
+              {isGroupLoading ? (
+                <Skeleton className="h-4 w-24" />
+              ) : group ? (
+                <Link
+                  to={`/permission-groups/show/${group.id}`}
+                  className="text-primary hover:underline"
+                >
+                  {group.name}
+                </Link>
+              ) : (
+                <span className="text-muted-foreground">-</span>
+              )}
+            </dd>
+          </div>
+        )}
       </dl>
     </ShowView>
   )

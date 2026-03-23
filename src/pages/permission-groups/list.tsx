@@ -6,6 +6,7 @@ import {
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
 import { PermissionGroupListFilter } from '@/components/refine-ui/table/permission-group-list-filter'
+import { ListPagination } from '@/components/shared/list-pagination'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -24,14 +25,21 @@ import type { PermissionGroup } from '@/types/permission-group'
 export function PermissionGroupList() {
   const { t } = useTranslation()
   const [filters, setFilters] = useState<CrudFilters>([])
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10 })
+
+  const handleFiltersChange = (newFilters: CrudFilters) => {
+    setFilters(newFilters)
+    setPagination((p) => ({ ...p, currentPage: 1 }))
+  }
 
   const { query, result } = useList<PermissionGroup>({
     resource: 'permission-groups',
-    pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    pagination: { ...pagination, mode: 'server' },
     filters,
   })
 
   const groups = Array.isArray(result?.data) ? result.data : []
+  const total = result?.total ?? 0
   const isLoading = query.isLoading
 
   return (
@@ -40,7 +48,7 @@ export function PermissionGroupList() {
       <div className="flex flex-col gap-4">
         <PermissionGroupListFilter
           filters={filters}
-          onFiltersChange={setFilters}
+          onFiltersChange={handleFiltersChange}
         />
       </div>
       <div className="rounded-md border">
@@ -119,6 +127,16 @@ export function PermissionGroupList() {
             </TableBody>
           </Table>
         )}
+      </div>
+      <div className="mt-4">
+        <ListPagination
+          currentPage={pagination.currentPage}
+          total={total}
+          pageSize={pagination.pageSize}
+          onPageChange={(page) =>
+            setPagination((p) => ({ ...p, currentPage: page }))
+          }
+        />
       </div>
     </ListView>
   )

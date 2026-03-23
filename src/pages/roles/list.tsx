@@ -6,6 +6,7 @@ import {
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
 import { RoleListFilter } from '@/components/refine-ui/table/role-list-filter'
+import { ListPagination } from '@/components/shared/list-pagination'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -24,21 +25,31 @@ import type { Role } from '@/types/role'
 export function RoleList() {
   const { t } = useTranslation()
   const [filters, setFilters] = useState<CrudFilters>([])
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10 })
+
+  const handleFiltersChange = (newFilters: CrudFilters) => {
+    setFilters(newFilters)
+    setPagination((p) => ({ ...p, currentPage: 1 }))
+  }
 
   const { query, result } = useList<Role>({
     resource: 'roles',
-    pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    pagination: { ...pagination, mode: 'server' },
     filters,
   })
 
   const roles = Array.isArray(result?.data) ? result.data : []
+  const total = result?.total ?? 0
   const isLoading = query.isLoading
 
   return (
     <ListView>
       <ListViewHeader resource="roles" />
       <div className="flex flex-col gap-4">
-        <RoleListFilter filters={filters} onFiltersChange={setFilters} />
+        <RoleListFilter
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+        />
       </div>
       <div className="rounded-md border">
         {isLoading ? (
@@ -116,6 +127,16 @@ export function RoleList() {
             </TableBody>
           </Table>
         )}
+      </div>
+      <div className="mt-4">
+        <ListPagination
+          currentPage={pagination.currentPage}
+          total={total}
+          pageSize={pagination.pageSize}
+          onPageChange={(page) =>
+            setPagination((p) => ({ ...p, currentPage: page }))
+          }
+        />
       </div>
     </ListView>
   )
