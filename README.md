@@ -7,6 +7,8 @@ A frontend RBAC (Role-Based Access Control) template built with **Refine**, **Re
 ## Features
 
 - **Users, Roles, Permissions, Permission Groups** — full CRUD (list, create, edit, show)
+- **RBAC** — permission-based access control, multiple mock users for testing
+- **List enhancements** — page size (10/25/50), URL-persisted pagination & filters, configurable ID column, bulk delete with confirmation
 - **shadcn/ui** — forms with React Hook Form, zod validation
 - **i18n** — English & 中文
 - **Dashboard** — stats cards, charts (Recharts)
@@ -44,7 +46,15 @@ pnpm install
 pnpm dev
 ```
 
-Runs the app with MSW mock API. Login with any username (e.g. `demo`).
+Runs the app with MSW mock API. Use these usernames to test different permissions:
+
+| Username               | Role       | Permissions                       |
+| ---------------------- | ---------- | --------------------------------- |
+| `admin@example.com`    | 管理员     | Full access                       |
+| `readonly@example.com` | 只读       | View only (no create/edit/delete) |
+| `users@example.com`    | 用户管理员 | Users CRUD, roles view            |
+| `roles@example.com`    | 角色管理员 | Roles CRUD only                   |
+| `guest@example.com`    | 访客       | Dashboard only                    |
 
 ### Build
 
@@ -278,18 +288,43 @@ This section documents the **business-specific** API expectations for this RBAC 
 
 #### 3. Resource Paths & Field Schemas
 
-| Resource          | Path                 | Key Fields                                     |
-| ----------------- | -------------------- | ---------------------------------------------- |
-| Users             | `/users`             | `id`, `email`, `name`, `createdAt?`            |
-| Roles             | `/roles`             | `id`, `name`, `description?`, `createdAt?`     |
-| Permissions       | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?` |
-| Permission Groups | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`     |
+| Resource          | Path                 | Key Fields                                                        |
+| ----------------- | -------------------- | ----------------------------------------------------------------- |
+| Users             | `/users`             | `id`, `email`, `name`, `roleIds?`, `createdAt?`                   |
+| Roles             | `/roles`             | `id`, `name`, `description?`, `permissionGroupIds?`, `createdAt?` |
+| Permissions       | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?`                    |
+| Permission Groups | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`                        |
 
 - All resources use `id: string` as primary key.
 - List filters: users support `q`, `name_like`, `email_like`; others follow generic `field_eq`, `field_like`, etc. from the API spec.
 - Sort: generic `sort` + `order` query params.
 
-#### 4. RBAC Permission Code Mapping
+#### 4. Assignment APIs
+
+The template supports three assignment flows. Backends must accept and persist these fields.
+
+| Assignment                     | Resource     | Field                          | Update Method                                                  | Description                                |
+| ------------------------------ | ------------ | ------------------------------ | -------------------------------------------------------------- | ------------------------------------------ |
+| User → Roles                   | `User`       | `roleIds: string[]`            | `PATCH /users/:id`                                             | Array of role IDs the user belongs to      |
+| Role → Permission Groups       | `Role`       | `permissionGroupIds: string[]` | `PATCH /roles/:id`                                             | Array of permission group IDs the role has |
+| Permission Group → Permissions | `Permission` | `groupId: string \| null`      | `PATCH /permissions/:id` or `PATCH /permissions/bulk?id=1,2,3` | Single group ID; `null` means unassigned   |
+
+**User → Roles**
+
+- Edit page sends `{ ...userFields, roleIds: ["1", "2"] }` via `PATCH /users/:id`.
+- Backend must accept `roleIds` in the update body and persist the user–role associations.
+
+**Role → Permission Groups**
+
+- Edit page sends `{ ...roleFields, permissionGroupIds: ["1", "2"] }` via `PATCH /roles/:id`.
+- Backend must accept `permissionGroupIds` and persist the role–permission-group associations.
+
+**Permission Group → Permissions**
+
+- Edit page uses `PATCH /permissions/bulk?id=1,2,3` with body `{ groupId: "1" }` to assign, or `{ groupId: null }` to unassign.
+- Each permission has at most one group; `groupId: null` means the permission is not in any group.
+
+#### 5. RBAC Permission Code Mapping
 
 Frontend maps resource+action to permission codes as follows:
 
@@ -304,7 +339,7 @@ Frontend maps resource+action to permission codes as follows:
 - Role name `admin` or `管理员` → full access regardless of permissions.
 - Unmapped resources (e.g. dashboard) default to allowed.
 
-#### 5. Login Flow (Optional)
+#### 6. Login Flow (Optional)
 
 The template ships with a mock login (no backend call). To integrate with a real backend:
 
@@ -312,7 +347,7 @@ The template ships with a mock login (no backend call). To integrate with a real
 - Adapt `authProvider.login` in `src/providers/auth-provider` to call that endpoint and store the token.
 - The token is sent as `Authorization: Bearer {token}` on subsequent requests (including `/me`).
 
-#### 6. Refresh Token (Cookie-Based)
+#### 7. Refresh Token (Cookie-Based)
 
 When the access token expires (API returns 401), the frontend uses the refresh token to obtain a new access token and retries the failed request.
 
@@ -408,12 +443,12 @@ export interface NormalizedApiError {
 
 MSW is used in development. Handlers simulate:
 
-- Login, current user (`/me`)
+- Login, current user (`/me`) — different users return different permissions based on login username
 - Users, roles, permissions, permission-groups CRUD
 - Dashboard stats (`/dashboard/stats`)
 - Pagination, filtering (e.g. user list `q` search)
 
-See `src/mocks/handlers` and `src/mocks/fixtures`. Mock responses follow the Backend API Spec (PageResponse, etc.).
+See `src/mocks/handlers`, `src/mocks/fixtures`, and `src/mocks/fixtures/mock-identities.ts` for mock user definitions. Mock responses follow the Backend API Spec (PageResponse, etc.).
 
 ## Docker
 

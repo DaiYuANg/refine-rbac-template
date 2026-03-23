@@ -7,6 +7,8 @@
 ## 功能
 
 - **用户、角色、权限、权限组** — 完整 CRUD（列表、新建、编辑、查看）
+- **RBAC** — 基于权限的访问控制，多种 mock 用户可测试不同权限
+- **列表增强** — 每页条数（10/25/50）、分页/筛选 URL 持久化、ID 列可配置、批量删除（含确认）
 - **shadcn/ui** — 表单配合 React Hook Form、zod 校验
 - **i18n** — 英文与中文
 - **仪表盘** — 统计卡片、图表（Recharts）
@@ -44,7 +46,15 @@ pnpm install
 pnpm dev
 ```
 
-使用 MSW mock API 启动应用。使用任意用户名登录（如 `demo`）。
+使用 MSW mock API 启动应用。可用以下用户名测试不同权限：
+
+| 用户名                 | 角色       | 权限                |
+| ---------------------- | ---------- | ------------------- |
+| `admin@example.com`    | 管理员     | 全部权限            |
+| `readonly@example.com` | 只读       | 仅查看              |
+| `users@example.com`    | 用户管理员 | 用户 CRUD、角色查看 |
+| `roles@example.com`    | 角色管理员 | 仅角色 CRUD         |
+| `guest@example.com`    | 访客       | 仅仪表盘            |
 
 ### 构建
 
@@ -261,18 +271,43 @@ src/
 
 #### 3. 资源路径与字段结构
 
-| 资源   | 路径                 | 核心字段                                       |
-| ------ | -------------------- | ---------------------------------------------- |
-| 用户   | `/users`             | `id`, `email`, `name`, `createdAt?`            |
-| 角色   | `/roles`             | `id`, `name`, `description?`, `createdAt?`     |
-| 权限   | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?` |
-| 权限组 | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`     |
+| 资源   | 路径                 | 核心字段                                                          |
+| ------ | -------------------- | ----------------------------------------------------------------- |
+| 用户   | `/users`             | `id`, `email`, `name`, `roleIds?`, `createdAt?`                   |
+| 角色   | `/roles`             | `id`, `name`, `description?`, `permissionGroupIds?`, `createdAt?` |
+| 权限   | `/permissions`       | `id`, `name`, `code`, `groupId?`, `createdAt?`                    |
+| 权限组 | `/permission-groups` | `id`, `name`, `description?`, `createdAt?`                        |
 
 - 主键统一为 `id: string`。
 - 列表筛选：用户支持 `q`、`name_like`、`email_like`；其余按 API 规范使用 `field_eq`、`field_like` 等。
 - 排序：统一使用 `sort`、`order` 查询参数。
 
-#### 4. RBAC 权限码映射
+#### 4. 分配相关接口
+
+模板支持三种分配关系，后端需接受并持久化对应字段。
+
+| 分配关系      | 资源         | 字段                           | 更新方式                                                       | 说明                             |
+| ------------- | ------------ | ------------------------------ | -------------------------------------------------------------- | -------------------------------- |
+| 用户 → 角色   | `User`       | `roleIds: string[]`            | `PATCH /users/:id`                                             | 用户所属角色 ID 数组             |
+| 角色 → 权限组 | `Role`       | `permissionGroupIds: string[]` | `PATCH /roles/:id`                                             | 角色拥有的权限组 ID 数组         |
+| 权限组 → 权限 | `Permission` | `groupId: string \| null`      | `PATCH /permissions/:id` 或 `PATCH /permissions/bulk?id=1,2,3` | 单个权限组 ID；`null` 表示未分配 |
+
+**用户 → 角色**
+
+- 编辑页通过 `PATCH /users/:id` 发送 `{ ...userFields, roleIds: ["1", "2"] }`。
+- 后端需接受 `roleIds` 并持久化用户与角色的关联。
+
+**角色 → 权限组**
+
+- 编辑页通过 `PATCH /roles/:id` 发送 `{ ...roleFields, permissionGroupIds: ["1", "2"] }`。
+- 后端需接受 `permissionGroupIds` 并持久化角色与权限组的关联。
+
+**权限组 → 权限**
+
+- 编辑页通过 `PATCH /permissions/bulk?id=1,2,3`，body `{ groupId: "1" }` 表示分配，`{ groupId: null }` 表示取消分配。
+- 每个权限最多属于一个权限组；`groupId: null` 表示该权限不属于任何组。
+
+#### 5. RBAC 权限码映射
 
 前端将「资源 + 操作」映射为权限码：
 
@@ -287,7 +322,7 @@ src/
 - 角色名为 `admin` 或 `管理员` 时，不受权限限制。
 - 未映射的资源（如 dashboard）默认放行。
 
-#### 5. 登录流程（可选）
+#### 6. 登录流程（可选）
 
 模板默认使用 mock 登录，不请求后端。对接真实后端时：
 
@@ -295,7 +330,7 @@ src/
 - 修改 `src/providers/auth-provider` 中的 `authProvider.login`，调用该接口并保存 token。
 - 后续请求（含 `/me`）通过 `Authorization: Bearer {token}` 携带 token。
 
-#### 6. Refresh Token（基于 Cookie）
+#### 7. Refresh Token（基于 Cookie）
 
 当 access token 过期（接口返回 401）时，前端使用 refresh token 获取新的 access token 并重试失败的请求。
 
@@ -391,12 +426,12 @@ export interface NormalizedApiError {
 
 开发环境使用 MSW，模拟接口包括：
 
-- 登录、当前用户（`/me`）
+- 登录、当前用户（`/me`）— 根据登录用户名返回不同权限
 - 用户、角色、权限、权限组 CRUD
 - 仪表盘统计（`/dashboard/stats`）
 - 分页、筛选（如用户列表 `q` 搜索）
 
-详见 `src/mocks/handlers` 和 `src/mocks/fixtures`。Mock 响应符合后端 API 规范（PageResponse 等）。
+详见 `src/mocks/handlers`、`src/mocks/fixtures` 及 `src/mocks/fixtures/mock-identities.ts`。Mock 响应符合后端 API 规范（PageResponse 等）。
 
 ## Docker
 

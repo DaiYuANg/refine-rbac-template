@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+import { ChevronDown } from 'lucide-react'
 import {
   Pagination,
   PaginationContent,
@@ -9,12 +10,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { type PageSize, PAGE_SIZES } from '@/constants/list'
 
 export type ListPaginationProps = {
   currentPage: number
   total: number
   pageSize: number
   onPageChange: (page: number) => void
+  onPageSizeChange?: (size: PageSize) => void
 }
 
 /** Show at most 5 page numbers around current */
@@ -25,6 +35,7 @@ export function ListPagination({
   total,
   pageSize,
   onPageChange,
+  onPageSizeChange,
 }: ListPaginationProps) {
   const { t } = useTranslation()
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
@@ -42,7 +53,27 @@ export function ListPagination({
   const to = Math.min(currentPage * pageSize, total)
 
   return (
-    <div className="flex flex-col items-end gap-4 sm:flex-row sm:justify-end">
+    <div className="flex flex-col items-end gap-4 sm:flex-row sm:justify-end sm:items-center">
+      {onPageSizeChange && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 gap-1">
+              {pageSize} {t('pagination.perPage')}
+              <ChevronDown className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {PAGE_SIZES.map((size) => (
+              <DropdownMenuItem
+                key={size}
+                onClick={() => onPageSizeChange(size)}
+              >
+                {size}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
       <p className="text-sm text-muted-foreground text-right">
         {total === 0
           ? t('pagination.noItems')

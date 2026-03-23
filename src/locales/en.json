@@ -23,13 +23,20 @@
     "export": "Export",
     "import": "Import",
     "list": "List",
-    "notAccessTitle": "You don't have permission to access"
+    "notAccessTitle": "You don't have permission to access",
+    "bulkDelete": "Delete selected",
+    "bulkDeleteConfirm": "Delete {{count}} item(s)? This action cannot be undone.",
+    "deleteSelected": "Delete {{count}} item(s)"
   },
   "pagination": {
     "noItems": "No items",
     "range": "{{from}}–{{to}} of {{total}}",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "perPage": "per page"
+  },
+  "list": {
+    "showIdColumn": "Show ID"
   },
   "common": {
     "search": "Keyword search",
@@ -74,7 +81,7 @@
     "loggingIn": "Signing in…",
     "placeholderUsername": "demo",
     "placeholderPassword": "Any (demo)",
-    "demoHint": "Demo: any username works. Replace with real auth when wiring API."
+    "demoHint": "Demo: use admin@example.com, readonly@example.com, users@example.com, roles@example.com or guest@example.com to test different permissions."
   },
   "auth": {
     "logout": "Log out",

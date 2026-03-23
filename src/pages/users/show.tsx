@@ -17,7 +17,7 @@ export function UserShow() {
   const isLoading = query?.isLoading ?? false
 
   const roleIds = user?.roleIds ?? []
-  const { query: rolesQuery, data: rolesData } = useMany<Role>({
+  const { query: rolesQuery, result: rolesResult } = useMany<Role>({
     resource: 'roles',
     ids: roleIds,
     queryOptions: {
@@ -25,7 +25,7 @@ export function UserShow() {
     },
   })
 
-  const selectedRoles = Array.isArray(rolesData?.data) ? rolesData.data : []
+  const selectedRoles = Array.isArray(rolesResult?.data) ? rolesResult.data : []
   const isRolesLoading = rolesQuery.isLoading
 
   if (isLoading || !user) {
@@ -74,7 +74,7 @@ export function UserShow() {
             ) : (
               <ScrollArea className="h-[220px] rounded-md border p-2">
                 <div className="flex flex-wrap gap-2">
-                  {selectedRoles.map((r) => (
+                  {selectedRoles.map((r: Role) => (
                     <Link
                       key={r.id}
                       to={`/roles/show/${r.id}`}

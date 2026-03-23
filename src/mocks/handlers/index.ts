@@ -1,6 +1,10 @@
 import { http, HttpResponse } from 'msw'
 import { env } from '@/config'
 import { shouldSimulate401 } from '@/mocks/mock-auth'
+import {
+  getMockIdentityByUsername,
+  type MockIdentity,
+} from '@/mocks/fixtures/mock-identities'
 import { MOCK_USERS } from '@/mocks/fixtures/users'
 import { MOCK_ROLES } from '@/mocks/fixtures/roles'
 import { MOCK_PERMISSIONS } from '@/mocks/fixtures/permissions'
@@ -27,6 +31,36 @@ function pageResponse<T>(
   pageSize: number
 ) {
   return { items, total, page, pageSize }
+}
+
+/** Apply sort from URL params (sort=field&order=asc|desc) */
+function applySort<T>(arr: T[], url: URL): T[] {
+  const sortParam = url.searchParams.get('sort')?.trim()
+  const orderParam = url.searchParams.get('order')?.trim()
+  if (!sortParam || !orderParam) return arr
+  const result = [...arr]
+  const fields = sortParam.split(',').map((s) => s.trim())
+  const orders = orderParam.split(',').map((s) => s.trim() as 'asc' | 'desc')
+  for (let i = fields.length - 1; i >= 0; i--) {
+    const f = fields[i]
+    const o = orders[i] ?? 'asc'
+    result.sort((a, b) => {
+      const av = (a as Record<string, unknown>)[f]
+      const bv = (b as Record<string, unknown>)[f]
+      const cmp =
+        av == null && bv == null
+          ? 0
+          : av == null
+            ? 1
+            : bv == null
+              ? -1
+              : String(av).localeCompare(String(bv), undefined, {
+                  numeric: true,
+                })
+      return o === 'asc' ? cmp : -cmp
+    })
+  }
+  return result
 }
 
 function createCrudHandlers<T extends { id: string }>(
@@ -169,21 +203,21 @@ export const handlers = [
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }
+    const auth = request.headers.get('Authorization') ?? ''
+    const token = auth.replace(/^Bearer\s+/i, '').trim()
+    let identity: MockIdentity
+    if (token.startsWith('mock:')) {
+      const username = token.slice(5)
+      identity = getMockIdentityByUsername(username)
+    } else {
+      identity = getMockIdentityByUsername('admin@example.com')
+    }
     return HttpResponse.json({
-      id: '1',
-      name: 'Demo User',
-      email: 'demo@example.com',
-      roles: [{ id: '1', name: '管理员' }],
-      permissions: [
-        'users:read',
-        'users:write',
-        'roles:read',
-        'roles:write',
-        'permissions:read',
-        'permissions:write',
-        'permission-groups:read',
-        'permission-groups:write',
-      ],
+      id: identity.id,
+      name: identity.name,
+      email: identity.email,
+      roles: identity.roles,
+      permissions: identity.permissions,
     })
   }),
 
@@ -240,6 +274,8 @@ export const handlers = [
       const lower = emailLike.toLowerCase()
       filtered = filtered.filter((u) => u.email.toLowerCase().includes(lower))
     }
+
+    filtered = applySort(filtered, url)
 
     const start = (page - 1) * pageSize
     const slice = filtered.slice(start, start + pageSize)
@@ -395,6 +431,8 @@ export const handlers = [
       )
     }
 
+    filtered = applySort(filtered, url)
+
     const start = (page - 1) * pageSize
     const slice = filtered.slice(start, start + pageSize)
     return HttpResponse.json(
@@ -437,6 +475,8 @@ export const handlers = [
           p.code.toLowerCase().includes(lower)
       )
     }
+
+    filtered = applySort(filtered, url)
 
     const start = (page - 1) * pageSize
     const slice = filtered.slice(start, start + pageSize)
@@ -518,6 +558,8 @@ export const handlers = [
           (g.description ?? '').toLowerCase().includes(lower)
       )
     }
+
+    filtered = applySort(filtered, url)
 
     const start = (page - 1) * pageSize
     const slice = filtered.slice(start, start + pageSize)

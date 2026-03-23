@@ -16,15 +16,15 @@ export function PermissionShow() {
   const isLoading = query?.isLoading ?? false
 
   const groupId = perm?.groupId ?? null
-  const { data: groupData, isLoading: isGroupLoading } =
-    useOne<PermissionGroup>({
-      resource: 'permission-groups',
-      id: groupId ?? '',
-      queryOptions: {
-        enabled: !!groupId,
-      },
-    })
-  const group = groupData?.data
+  const { result: groupResult, query: groupQuery } = useOne<PermissionGroup>({
+    resource: 'permission-groups',
+    id: groupId ?? '',
+    queryOptions: {
+      enabled: !!groupId,
+    },
+  })
+  const group = groupResult
+  const isGroupLoading = groupQuery?.isLoading ?? false
 
   if (isLoading || !perm) {
     return (

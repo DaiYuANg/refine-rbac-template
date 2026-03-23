@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useList } from '@refinedev/core'
+import { useTable } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
   ListView,
@@ -7,6 +6,7 @@ import {
 } from '@/components/refine-ui/views/list-view'
 import { PermissionListFilter } from '@/components/refine-ui/table/permission-list-filter'
 import { ListPagination } from '@/components/shared/list-pagination'
+import { ListToolbar } from '@/components/shared/list-toolbar'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import {
   Table,
@@ -17,36 +17,44 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { CrudFilters } from '@refinedev/core'
+import { useListDisplayStore } from '@/stores/list-display-store'
+import { SortableTableHead } from '@/components/shared/sortable-table-head'
 import type { Permission } from '@/types/permission'
 
 export function PermissionList() {
   const { t } = useTranslation()
-  const [filters, setFilters] = useState<CrudFilters>([])
-  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10 })
-
-  const handleFiltersChange = (newFilters: CrudFilters) => {
-    setFilters(newFilters)
-    setPagination((p) => ({ ...p, currentPage: 1 }))
-  }
-
-  const { query, result } = useList<Permission>({
-    resource: 'permissions',
-    pagination: { ...pagination, mode: 'server' },
+  const {
+    tableQuery: { isLoading },
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
     filters,
+    setFilters,
+    sorters,
+    setSorters,
+    result,
+  } = useTable<Permission>({
+    resource: 'permissions',
+    pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    sorters: { mode: 'server' },
+    syncWithLocation: true,
   })
+  const { showIdColumn } = useListDisplayStore()
 
   const permissions = Array.isArray(result?.data) ? result.data : []
   const total = result?.total ?? 0
-  const isLoading = query.isLoading
+
+  const colCount = (showIdColumn ? 1 : 0) + 3
 
   return (
     <ListView>
       <ListViewHeader resource="permissions" canCreate={false} />
       <div className="flex flex-col gap-4">
+        <ListToolbar />
         <PermissionListFilter
           filters={filters}
-          onFiltersChange={handleFiltersChange}
+          onFiltersChange={(f) => setFilters(f, 'replace')}
         />
       </div>
       <div className="rounded-md border">
@@ -60,9 +68,21 @@ export function PermissionList() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>{t('permissions.name')}</TableHead>
-                <TableHead>{t('permissions.code')}</TableHead>
+                {showIdColumn && <TableHead>ID</TableHead>}
+                <SortableTableHead
+                  field="name"
+                  sorters={sorters}
+                  onSort={setSorters}
+                >
+                  {t('permissions.name')}
+                </SortableTableHead>
+                <SortableTableHead
+                  field="code"
+                  sorters={sorters}
+                  onSort={setSorters}
+                >
+                  {t('permissions.code')}
+                </SortableTableHead>
                 <TableHead className="w-[100px] text-right">
                   {t('common.actions')}
                 </TableHead>
@@ -72,7 +92,7 @@ export function PermissionList() {
               {permissions.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={colCount}
                     className="h-24 text-center text-muted-foreground"
                   >
                     {t('common.noData')}
@@ -81,9 +101,11 @@ export function PermissionList() {
               ) : (
                 permissions.map((perm: Permission) => (
                   <TableRow key={perm.id}>
-                    <TableCell className="font-mono text-xs">
-                      {perm.id}
-                    </TableCell>
+                    {showIdColumn && (
+                      <TableCell className="font-mono text-xs">
+                        {perm.id}
+                      </TableCell>
+                    )}
                     <TableCell>
                       <ShowButton
                         resource="permissions"
@@ -115,12 +137,11 @@ export function PermissionList() {
       </div>
       <div className="mt-4">
         <ListPagination
-          currentPage={pagination.currentPage}
+          currentPage={currentPage}
           total={total}
-          pageSize={pagination.pageSize}
-          onPageChange={(page) =>
-            setPagination((p) => ({ ...p, currentPage: page }))
-          }
+          pageSize={pageSize}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
         />
       </div>
     </ListView>

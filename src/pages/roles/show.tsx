@@ -17,15 +17,19 @@ export function RoleShow() {
   const isLoading = query?.isLoading ?? false
 
   const permissionGroupIds = role?.permissionGroupIds ?? []
-  const { query: groupsQuery, data: groupsData } = useMany<PermissionGroup>({
-    resource: 'permission-groups',
-    ids: permissionGroupIds,
-    queryOptions: {
-      enabled: !isLoading && permissionGroupIds.length > 0,
-    },
-  })
+  const { query: groupsQuery, result: groupsResult } = useMany<PermissionGroup>(
+    {
+      resource: 'permission-groups',
+      ids: permissionGroupIds,
+      queryOptions: {
+        enabled: !isLoading && permissionGroupIds.length > 0,
+      },
+    }
+  )
 
-  const selectedGroups = Array.isArray(groupsData?.data) ? groupsData.data : []
+  const selectedGroups = Array.isArray(groupsResult?.data)
+    ? groupsResult.data
+    : []
   const isGroupsLoading = groupsQuery.isLoading
 
   if (isLoading || !role) {
@@ -74,7 +78,7 @@ export function RoleShow() {
             ) : (
               <ScrollArea className="h-[220px] rounded-md border p-2">
                 <div className="flex flex-wrap gap-2">
-                  {selectedGroups.map((g) => (
+                  {selectedGroups.map((g: PermissionGroup) => (
                     <Link
                       key={g.id}
                       to={`/permission-groups/show/${g.id}`}

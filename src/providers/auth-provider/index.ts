@@ -50,7 +50,7 @@ export const authProvider: AuthProvider = {
         },
       }
     }
-    useSessionStore.getState().setSession(true, 'mock-jwt-token')
+    useSessionStore.getState().setSession(true, `mock:${username.trim()}`)
     return { success: true, redirectTo: ROUTES.home }
   },
   logout: async () => {
