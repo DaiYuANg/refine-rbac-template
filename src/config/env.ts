@@ -6,9 +6,21 @@
 
 const raw = import.meta.env
 
+/** Whether to use MSW mock API. When true, requests are intercepted by mock handlers. */
+export const useMock =
+  (raw.VITE_USE_MOCK as string | undefined) === 'true' || raw.DEV === true
+
+const apiBaseUrl = (raw.VITE_API_URL as string | undefined)?.trim() ?? '/api'
+
+if (raw.PROD === true && !useMock && !apiBaseUrl) {
+  throw new Error(
+    '[config] VITE_API_URL is required in production when not using mock API.'
+  )
+}
+
 export const env = {
   /** API base URL for data provider (e.g. '/api') */
-  apiBaseUrl: (raw.VITE_API_URL as string | undefined) ?? '/api',
+  apiBaseUrl,
 
   /** Whether the app is running in development mode */
   isDev: raw.DEV === true,
@@ -18,6 +30,9 @@ export const env = {
 
   /** Application mode - 'development' | 'production' */
   mode: raw.MODE as string,
+
+  /** Whether to run MSW mock API (dev default true, or VITE_USE_MOCK=true) */
+  useMock,
 } as const
 
 export type EnvConfig = typeof env

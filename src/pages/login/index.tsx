@@ -5,8 +5,7 @@ import { Navigate } from 'react-router-dom'
 import { LayoutDashboard } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ThemeProvider } from '@/components/refine-ui/theme/theme-provider'
-import { ThemeToggle } from '@/components/refine-ui/theme/theme-toggle'
+import { ThemeSelect } from '@/components/refine-ui/theme/theme-select'
 import { LanguageToggle } from '@/components/refine-ui/i18n/language-toggle'
 import { ROUTES } from '@/constants/routes'
 import i18n from '@/i18n'
@@ -31,7 +30,7 @@ function LoginForm() {
     >
       <div className="absolute right-4 top-4 flex items-center gap-2">
         <LanguageToggle />
-        <ThemeToggle />
+        <ThemeSelect />
       </div>
       <div className="w-full max-w-sm rounded-lg border bg-card p-8 shadow-sm">
         <div className="mb-8 flex flex-col items-center gap-2 text-center">
@@ -86,18 +85,16 @@ function LoginForm() {
 /** 未登录默认入口；已登录访问 /login 时回到首页。 */
 export function LoginPage() {
   return (
-    <ThemeProvider>
-      <Authenticated
-        key="login-page-guard"
-        loading={
-          <div className="flex min-h-svh items-center justify-center text-muted-foreground">
-            {i18n.t('common.loading')}
-          </div>
-        }
-        fallback={<LoginForm />}
-      >
-        <Navigate to={ROUTES.home} replace />
-      </Authenticated>
-    </ThemeProvider>
+    <Authenticated
+      key="login-page-guard"
+      loading={
+        <div className="flex min-h-svh items-center justify-center text-muted-foreground">
+          {i18n.t('common.loading')}
+        </div>
+      }
+      fallback={<LoginForm />}
+    >
+      <Navigate to={ROUTES.home} replace />
+    </Authenticated>
   )
 }

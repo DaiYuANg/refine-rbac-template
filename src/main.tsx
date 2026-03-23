@@ -1,4 +1,5 @@
 import '@/i18n'
+import '@/utils/date'
 import './index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -18,7 +19,7 @@ function mount() {
   )
 }
 
-if (env.isDev) {
+if (env.useMock) {
   worker.start({ onUnhandledRequest: 'bypass', quiet: true }).then(mount)
 } else {
   mount()

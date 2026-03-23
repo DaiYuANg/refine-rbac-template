@@ -10,21 +10,21 @@ type ThemeToggleProps = {
 }
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const { theme, setTheme } = useTheme()
+  const { mode, setMode } = useTheme()
 
   const cycleTheme = () => {
-    switch (theme) {
+    switch (mode) {
       case 'light':
-        setTheme('dark')
+        setMode('dark')
         break
       case 'dark':
-        setTheme('system')
+        setMode('system')
         break
       case 'system':
-        setTheme('light')
+        setMode('light')
         break
       default:
-        setTheme('light')
+        setMode('light')
     }
   }
 
@@ -51,7 +51,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           'transition-all',
           'duration-200',
           {
-            '-rotate-90 scale-0': theme === 'dark' || theme === 'system',
+            '-rotate-90 scale-0': mode === 'dark' || mode === 'system',
           }
         )}
       />
@@ -65,8 +65,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           'transition-all',
           'duration-200',
           {
-            'rotate-0 scale-100': theme === 'dark',
-            'rotate-90 scale-0': theme === 'light' || theme === 'system',
+            'rotate-0 scale-100': mode === 'dark',
+            'rotate-90 scale-0': mode === 'light' || mode === 'system',
           }
         )}
       />
@@ -80,8 +80,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           'transition-all',
           'duration-200',
           {
-            'scale-100': theme === 'system',
-            'scale-0': theme === 'light' || theme === 'dark',
+            'scale-100': mode === 'system',
+            'scale-0': mode === 'light' || mode === 'dark',
           }
         )}
       />

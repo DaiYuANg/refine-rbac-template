@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useThrottledCallback } from '@/hooks/use-throttled-callback'
 import type { PermissionGroup } from '@/types/permission-group'
 
 const permissionGroupSchema = z.object({
@@ -42,6 +43,15 @@ export function PermissionGroupEdit() {
     handleSubmit,
   } = form
 
+  const throttledOnFinish = useThrottledCallback(
+    (values: PermissionGroupFormValues) =>
+      onFinish({
+        ...values,
+        description: values.description || undefined,
+      }),
+    300
+  )
+
   const isLoading = query?.isLoading ?? false
 
   if (isLoading) {
@@ -61,12 +71,7 @@ export function PermissionGroupEdit() {
       <EditViewHeader resource="permission-groups" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit((values) =>
-            onFinish({
-              ...values,
-              description: values.description || undefined,
-            })
-          )}
+          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
           className="flex flex-col gap-6 max-w-md"
         >
           <FormField

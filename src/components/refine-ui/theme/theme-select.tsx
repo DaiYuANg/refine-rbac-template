@@ -6,92 +6,88 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Moon, Sun, Monitor, ChevronDown, Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Moon, Sun, Monitor, Check, Palette } from 'lucide-react'
+import type { ThemeMode, ThemeColor } from './theme-provider'
 
-type ThemeOption = {
-  value: 'light' | 'dark' | 'system'
+type ModeOption = {
+  value: ThemeMode
   label: string
   icon: React.ReactNode
 }
 
-const themeOptions: ThemeOption[] = [
-  {
-    value: 'light',
-    label: 'Light',
-    icon: <Sun className="h-4 w-4" />,
-  },
-  {
-    value: 'dark',
-    label: 'Dark',
-    icon: <Moon className="h-4 w-4" />,
-  },
-  {
-    value: 'system',
-    label: 'System',
-    icon: <Monitor className="h-4 w-4" />,
-  },
+type ColorOption = {
+  value: ThemeColor
+  label: string
+}
+
+const modeOptions: ModeOption[] = [
+  { value: 'light', label: 'Light', icon: <Sun className="h-4 w-4" /> },
+  { value: 'dark', label: 'Dark', icon: <Moon className="h-4 w-4" /> },
+  { value: 'system', label: 'System', icon: <Monitor className="h-4 w-4" /> },
+]
+
+const colorOptions: ColorOption[] = [
+  { value: 'default', label: 'Default' },
+  { value: 'zinc', label: 'Zinc' },
+  { value: 'slate', label: 'Slate' },
+  { value: 'blue', label: 'Blue' },
+  { value: 'green', label: 'Green' },
+  { value: 'violet', label: 'Violet' },
 ]
 
 export function ThemeSelect() {
-  const { theme, setTheme } = useTheme()
-
-  const currentTheme = themeOptions.find((option) => option.value === theme)
+  const { mode, color, setMode, setColor } = useTheme()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="lg"
-          className={cn(
-            'w-full',
-            'justify-between',
-            'px-3',
-            'text-left',
-            'text-sm',
-            'font-normal',
-            'text-foreground',
-            'hover:bg-accent',
-            'hover:text-accent-foreground',
-            'focus-visible:outline-none',
-            'focus-visible:ring-2',
-            'focus-visible:ring-ring'
-          )}
-        >
-          <div className="flex items-center gap-2">
-            {currentTheme?.icon}
-            <span>{currentTheme?.label}</span>
-          </div>
-          <ChevronDown className="h-4 w-4 opacity-50" />
+        <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <Palette className="absolute h-4 w-4 scale-0 opacity-0" />
+          <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-40 space-y-1">
-        {themeOptions.map((option) => {
-          const isSelected = theme === option.value
-
-          return (
-            <DropdownMenuItem
-              key={option.value}
-              onClick={() => setTheme(option.value)}
-              className={cn(
-                'flex items-center gap-2 cursor-pointer relative pr-8',
-                {
-                  'bg-accent text-accent-foreground': isSelected,
-                }
-              )}
-            >
-              {option.icon}
-              <span>{option.label}</span>
-              {isSelected && (
-                <Check className="h-4 w-4 absolute right-2 text-primary" />
-              )}
-            </DropdownMenuItem>
-          )
-        })}
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Monitor className="h-3.5 w-3.5" />
+          Mode
+        </DropdownMenuLabel>
+        {modeOptions.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => setMode(option.value)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            {option.icon}
+            <span>{option.label}</span>
+            {mode === option.value && (
+              <Check className="ml-auto h-4 w-4 text-primary" />
+            )}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Palette className="h-3.5 w-3.5" />
+          Color
+        </DropdownMenuLabel>
+        {colorOptions.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => setColor(option.value)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <span>{option.label}</span>
+            {color === option.value && (
+              <Check className="ml-auto h-4 w-4 text-primary" />
+            )}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   )

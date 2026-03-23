@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import TurboConsole from 'unplugin-turbo-console/vite'
 import { compression } from 'vite-plugin-compression2'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
@@ -12,6 +13,7 @@ export default defineConfig(({ command }) => ({
     tailwindcss(),
     ...(command === 'serve' ? [TurboConsole()] : []),
     compression(),
+    VitePWA({ registerType: 'autoUpdate' }),
   ],
   build: {
     rolldownOptions: {

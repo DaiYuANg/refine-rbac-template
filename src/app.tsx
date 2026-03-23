@@ -18,6 +18,7 @@ import {
 import { ReactQueryDevtoolsPanel } from '@/components/shared/react-query-devtools-panel'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { ThemeProvider } from '@/components/refine-ui/theme/theme-provider'
 import { Layout } from '@/components/refine-ui/layout/layout'
 import { resources } from '@/constants'
 import { ROUTES } from '@/constants/routes'
@@ -27,44 +28,46 @@ import { AppRoutes } from '@/routes'
 function App() {
   return (
     <BrowserRouter>
-      <Refine
-        dataProvider={dataProviderInstance}
-        authProvider={authProvider}
-        accessControlProvider={accessControlProvider}
-        notificationProvider={notificationProvider}
-        i18nProvider={i18nProvider}
-        routerProvider={routerProvider}
-        resources={resources}
-        options={{
-          syncWithLocation: true,
-          title: {
-            icon: <LayoutDashboard className="size-6" />,
-            text: 'RBAC Template',
-          },
-        }}
-      >
-        <TooltipProvider>
-          <Toaster />
-          <ReactQueryDevtoolsPanel />
-          <Routes>
-            <Route path={ROUTES.login} element={<LoginPage />} />
-            <Route
-              element={
-                <Authenticated
-                  key="authenticated"
-                  fallback={<Navigate to={ROUTES.login} replace />}
-                >
-                  <Layout>
-                    <Outlet />
-                  </Layout>
-                </Authenticated>
-              }
-            >
-              <Route path="*" element={<AppRoutes />} />
-            </Route>
-          </Routes>
-        </TooltipProvider>
-      </Refine>
+      <ThemeProvider>
+        <Refine
+          dataProvider={dataProviderInstance}
+          authProvider={authProvider}
+          accessControlProvider={accessControlProvider}
+          notificationProvider={notificationProvider}
+          i18nProvider={i18nProvider}
+          routerProvider={routerProvider}
+          resources={resources}
+          options={{
+            syncWithLocation: true,
+            title: {
+              icon: <LayoutDashboard className="size-6" />,
+              text: 'RBAC Template',
+            },
+          }}
+        >
+          <TooltipProvider>
+            <Toaster />
+            <ReactQueryDevtoolsPanel />
+            <Routes>
+              <Route path={ROUTES.login} element={<LoginPage />} />
+              <Route
+                element={
+                  <Authenticated
+                    key="authenticated"
+                    fallback={<Navigate to={ROUTES.login} replace />}
+                  >
+                    <Layout>
+                      <Outlet />
+                    </Layout>
+                  </Authenticated>
+                }
+              >
+                <Route path="*" element={<AppRoutes />} />
+              </Route>
+            </Routes>
+          </TooltipProvider>
+        </Refine>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

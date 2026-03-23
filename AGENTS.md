@@ -135,6 +135,7 @@ This project should avoid modifying original `shadcn/ui` components and componen
 
 ## Data Provider Rules
 
+This project uses a **custom data provider** and defines a **backend API contract** for REST adapters. See [README.md](./README.md#documentation) and [README.zh-CN.md](./README.zh-CN.md#文档).
 All application requests must go through the **Refine data provider**.
 
 ### Mandatory rules

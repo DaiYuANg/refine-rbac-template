@@ -1,15 +1,20 @@
 import type { AccessControlProvider } from '@refinedev/core'
-
-export type Role = string
-export type Permission = string
+import { useAuthStore } from '@/features/rbac'
+import { checkAccess } from '@/features/rbac/permission-codes'
 
 /**
  * Centralized RBAC - roles, permissions, and access decisions.
- * Extend with real permission checks from backend.
+ * Permission codes (e.g. users:read, users:write) come from /me.
  */
 export const accessControlProvider: AccessControlProvider = {
-  can: async () => {
-    // Mock: allow all. Replace with real permission checks.
-    return { can: true }
+  can: async ({ resource, action }) => {
+    const { roles, permissions } = useAuthStore.getState()
+
+    // Bootstrap: when store not yet populated, allow (authProvider.getIdentity will fetch /me)
+    if (!resource) return { can: true }
+    if (permissions.length === 0 && roles.length === 0) return { can: true }
+
+    const can = checkAccess(permissions, roles, resource, action ?? 'list')
+    return { can }
   },
 }

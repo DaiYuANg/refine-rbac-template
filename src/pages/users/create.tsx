@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useThrottledCallback } from '@/hooks/use-throttled-callback'
 import type { User } from '@/types/user'
 
 const userSchema = z.object({
@@ -45,12 +46,17 @@ export function UserCreate() {
     handleSubmit,
   } = form
 
+  const throttledOnFinish = useThrottledCallback(
+    (values: UserFormValues) => onFinish(values),
+    300
+  )
+
   return (
     <CreateView>
       <CreateViewHeader resource="users" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit((values) => onFinish(values))}
+          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
           className="flex flex-col gap-6 max-w-md"
         >
           <FormField

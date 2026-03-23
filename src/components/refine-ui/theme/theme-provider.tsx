@@ -2,59 +2,89 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 
-type Theme = 'dark' | 'light' | 'system'
+export type ThemeMode = 'dark' | 'light' | 'system'
+export type ThemeColor =
+  | 'default'
+  | 'zinc'
+  | 'slate'
+  | 'blue'
+  | 'green'
+  | 'violet'
 
 type ThemeProviderProps = {
   children: React.ReactNode
-  defaultTheme?: Theme
+  defaultTheme?: ThemeMode
+  defaultColor?: ThemeColor
   storageKey?: string
 }
 
 type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
+  mode: ThemeMode
+  color: ThemeColor
+  setMode: (mode: ThemeMode) => void
+  setColor: (color: ThemeColor) => void
 }
 
 const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null,
+  mode: 'system',
+  color: 'default',
+  setMode: () => null,
+  setColor: () => null,
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+const MODE_STORAGE_KEY = 'refine-ui-theme-mode'
+const COLOR_STORAGE_KEY = 'refine-ui-theme-color'
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'refine-ui-theme',
+  defaultColor = 'default',
+  storageKey,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  const modeKey = storageKey ? `${storageKey}-mode` : MODE_STORAGE_KEY
+  const colorKey = storageKey ? `${storageKey}-color` : COLOR_STORAGE_KEY
+
+  const [mode, setModeState] = useState<ThemeMode>(
+    () => (localStorage.getItem(modeKey) as ThemeMode) || defaultTheme
+  )
+  const [color, setColorState] = useState<ThemeColor>(
+    () => (localStorage.getItem(colorKey) as ThemeColor) || defaultColor
   )
 
   useEffect(() => {
     const root = window.document.documentElement
 
     root.classList.remove('light', 'dark')
+    root.removeAttribute('data-theme')
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
-        .matches
-        ? 'dark'
-        : 'light'
+    const resolvedMode =
+      mode === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : mode
 
-      root.classList.add(systemTheme)
-      return
+    root.classList.add(resolvedMode)
+    if (color === 'default') {
+      root.removeAttribute('data-theme')
+    } else {
+      root.setAttribute('data-theme', color)
     }
-
-    root.classList.add(theme)
-  }, [theme])
+  }, [mode, color])
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    mode,
+    color,
+    setMode: (m: ThemeMode) => {
+      localStorage.setItem(modeKey, m)
+      setModeState(m)
+    },
+    setColor: (c: ThemeColor) => {
+      localStorage.setItem(colorKey, c)
+      setColorState(c)
     },
   }
 

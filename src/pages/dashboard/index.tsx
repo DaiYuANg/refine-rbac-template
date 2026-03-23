@@ -24,6 +24,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Users, Shield, Key, Activity } from 'lucide-react'
+import { useDashboardStats } from '@/features/dashboard'
 import {
   DASHBOARD_STAT_CARDS,
   DASHBOARD_USER_ACTIVITY,
@@ -40,6 +41,20 @@ const STAT_CARD_ICONS: Record<string, typeof Users> = {
 
 export function DashboardPage() {
   const { t } = useTranslation()
+  const { data, isLoading } = useDashboardStats()
+
+  const statCards = data?.statCards ?? DASHBOARD_STAT_CARDS
+  const userActivity = data?.userActivity ?? DASHBOARD_USER_ACTIVITY
+  const roleDistribution = data?.roleDistribution ?? DASHBOARD_ROLE_DISTRIBUTION
+  const permissionGroups = data?.permissionGroups ?? DASHBOARD_PERMISSION_GROUPS
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[200px] items-center justify-center">
+        <span className="text-muted-foreground text-sm">Loading…</span>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -50,7 +65,7 @@ export function DashboardPage() {
 
       {/* 统计卡片 */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {DASHBOARD_STAT_CARDS.map(({ key, value, labelKey }) => {
+        {statCards.map(({ key, value, labelKey }) => {
           const Icon = STAT_CARD_ICONS[key] ?? Users
           return (
             <Card key={key}>
@@ -79,7 +94,7 @@ export function DashboardPage() {
           <CardContent>
             <div className="h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={DASHBOARD_USER_ACTIVITY}>
+                <AreaChart data={userActivity}>
                   <defs>
                     <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
                       <stop
@@ -115,18 +130,19 @@ export function DashboardPage() {
                     dataKey="month"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
                   />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
                   />
                   <Tooltip
                     contentStyle={{
                       borderRadius: '8px',
                       border: '1px solid var(--border)',
                       backgroundColor: 'var(--card)',
+                      color: 'var(--card-foreground)',
                     }}
                   />
                   <Area
@@ -145,7 +161,7 @@ export function DashboardPage() {
                     fill="url(#fillLogins)"
                     strokeWidth={2}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -165,18 +181,44 @@ export function DashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={DASHBOARD_ROLE_DISTRIBUTION}
+                    data={roleDistribution}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
                     outerRadius={90}
                     paddingAngle={2}
                     dataKey="value"
-                    label={({ name, percent }) =>
-                      `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-                    }
+                    label={({
+                      cx,
+                      cy,
+                      midAngle = 0,
+                      innerRadius = 0,
+                      outerRadius = 0,
+                      name,
+                      percent,
+                    }) => {
+                      const radius =
+                        innerRadius + (outerRadius - innerRadius) * 0.5
+                      const x =
+                        cx + radius * Math.cos(-midAngle * (Math.PI / 180))
+                      const y =
+                        cy + radius * Math.sin(-midAngle * (Math.PI / 180))
+                      return (
+                        <text
+                          x={x}
+                          y={y}
+                          fill="var(--foreground)"
+                          textAnchor="middle"
+                          dominantBaseline="central"
+                          style={{ fontSize: 12 }}
+                        >
+                          {`${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                        </text>
+                      )
+                    }}
+                    labelLine={false}
                   >
-                    {DASHBOARD_ROLE_DISTRIBUTION.map((entry, index) => (
+                    {roleDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -185,6 +227,7 @@ export function DashboardPage() {
                       borderRadius: '8px',
                       border: '1px solid var(--border)',
                       backgroundColor: 'var(--card)',
+                      color: 'var(--card-foreground)',
                     }}
                     formatter={(value) => [value, t('dashboard.users')]}
                   />
@@ -207,7 +250,7 @@ export function DashboardPage() {
           <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={DASHBOARD_PERMISSION_GROUPS}
+                data={permissionGroups}
                 layout="vertical"
                 margin={{ left: 20 }}
               >
@@ -220,7 +263,7 @@ export function DashboardPage() {
                   type="number"
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
                 />
                 <YAxis
                   type="category"
@@ -228,13 +271,14 @@ export function DashboardPage() {
                   tickLine={false}
                   axisLine={false}
                   width={80}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
                 />
                 <Tooltip
                   contentStyle={{
                     borderRadius: '8px',
                     border: '1px solid var(--border)',
                     backgroundColor: 'var(--card)',
+                    color: 'var(--card-foreground)',
                   }}
                 />
                 <Bar

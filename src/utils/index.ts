@@ -1,5 +1,8 @@
 // App-level utilities (shadcn cn lives in @/lib/utils)
 
+export { dayjs, formatDate, DATE_FORMATS } from './date'
+export type { Dayjs, DateFormatKey } from './date'
+
 /**
  * Get avatar fallback text: first character for CJK names, first letter(s) for Latin names.
  * 中文取第一个字，英文取每个单词的首字母（如 John Doe -> JD）。

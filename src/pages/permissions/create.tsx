@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useThrottledCallback } from '@/hooks/use-throttled-callback'
 import type { Permission } from '@/types/permission'
 
 const permissionSchema = z.object({
@@ -47,17 +48,21 @@ export function PermissionCreate() {
     handleSubmit,
   } = form
 
+  const throttledOnFinish = useThrottledCallback(
+    (values: PermissionFormValues) =>
+      onFinish({
+        ...values,
+        groupId: values.groupId || undefined,
+      }),
+    300
+  )
+
   return (
     <CreateView>
       <CreateViewHeader resource="permissions" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit((values) =>
-            onFinish({
-              ...values,
-              groupId: values.groupId || undefined,
-            })
-          )}
+          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
           className="flex flex-col gap-6 max-w-md"
         >
           <FormField

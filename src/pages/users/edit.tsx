@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useThrottledCallback } from '@/hooks/use-throttled-callback'
 import type { User } from '@/types/user'
 
 const userSchema = z.object({
@@ -42,6 +43,11 @@ export function UserEdit() {
     handleSubmit,
   } = form
 
+  const throttledOnFinish = useThrottledCallback(
+    (values: UserFormValues) => onFinish(values),
+    300
+  )
+
   const isLoading = query?.isLoading ?? false
 
   if (isLoading) {
@@ -61,7 +67,7 @@ export function UserEdit() {
       <EditViewHeader resource="users" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit((values) => onFinish(values))}
+          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
           className="flex flex-col gap-6 max-w-md"
         >
           <FormField

@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useThrottledCallback } from '@/hooks/use-throttled-callback'
 import type { Role } from '@/types/role'
 
 const roleSchema = z.object({
@@ -45,17 +46,21 @@ export function RoleCreate() {
     handleSubmit,
   } = form
 
+  const throttledOnFinish = useThrottledCallback(
+    (values: RoleFormValues) =>
+      onFinish({
+        ...values,
+        description: values.description || undefined,
+      }),
+    300
+  )
+
   return (
     <CreateView>
       <CreateViewHeader resource="roles" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit((values) =>
-            onFinish({
-              ...values,
-              description: values.description || undefined,
-            })
-          )}
+          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
           className="flex flex-col gap-6 max-w-md"
         >
           <FormField

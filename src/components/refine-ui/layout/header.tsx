@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
 } from '@/components/ui/dropdown-menu'
 import { DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { ThemeToggle } from '@/components/refine-ui/theme/theme-toggle'
+import { ThemeSelect } from '@/components/refine-ui/theme/theme-select'
 import { LanguageToggle } from '@/components/refine-ui/i18n/language-toggle'
 import { UserAvatar } from '@/components/refine-ui/layout/user-avatar'
 import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar'
@@ -43,7 +43,7 @@ function DesktopHeader() {
       )}
     >
       <LanguageToggle />
-      <ThemeToggle />
+      <ThemeSelect />
       <UserDropdown />
     </header>
   )
@@ -117,7 +117,7 @@ function MobileHeader() {
 
       <div className="flex items-center gap-2">
         <LanguageToggle className={cn('h-8', 'w-8')} />
-        <ThemeToggle className={cn('h-8', 'w-8')} />
+        <ThemeSelect />
       </div>
     </header>
   )
