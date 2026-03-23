@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
   ListView,
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
+import { PermissionGroupListFilter } from '@/components/refine-ui/table/permission-group-list-filter'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -16,13 +18,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { CrudFilters } from '@refinedev/core'
 import type { PermissionGroup } from '@/types/permission-group'
 
 export function PermissionGroupList() {
   const { t } = useTranslation()
+  const [filters, setFilters] = useState<CrudFilters>([])
+
   const { query, result } = useList<PermissionGroup>({
     resource: 'permission-groups',
     pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    filters,
   })
 
   const groups = Array.isArray(result?.data) ? result.data : []
@@ -31,6 +37,12 @@ export function PermissionGroupList() {
   return (
     <ListView>
       <ListViewHeader resource="permission-groups" />
+      <div className="flex flex-col gap-4">
+        <PermissionGroupListFilter
+          filters={filters}
+          onFiltersChange={setFilters}
+        />
+      </div>
       <div className="rounded-md border">
         {isLoading ? (
           <div className="p-4 space-y-3">

@@ -22,4 +22,25 @@ export const MOCK_PERMISSIONS: Permission[] = [
     groupId: '2',
     createdAt: '2024-02-20T14:30:00Z',
   },
+  {
+    id: '4',
+    name: '编辑角色',
+    code: 'roles:write',
+    groupId: '2',
+    createdAt: '2024-02-20T14:30:00Z',
+  },
+  {
+    id: '5',
+    name: '查看权限',
+    code: 'permissions:read',
+    groupId: '3',
+    createdAt: '2024-02-20T14:30:00Z',
+  },
+  {
+    id: '6',
+    name: '编辑权限',
+    code: 'permissions:write',
+    groupId: '3',
+    createdAt: '2024-02-20T14:30:00Z',
+  },
 ]

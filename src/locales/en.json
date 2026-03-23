@@ -90,6 +90,8 @@
     "name": "Name",
     "email": "Email",
     "createTitle": "Create User",
+    "assignRoles": "Assign roles",
+    "assignRolesDesc": "Select which roles this user has.",
     "searchPlaceholder": "Search by name or email…",
     "suggestions": "Suggestions",
     "noSuggestions": "No matches",
@@ -101,7 +103,14 @@
     "title": "Roles",
     "name": "Name",
     "description": "Description",
-    "createTitle": "Create Role"
+    "createTitle": "Create Role",
+    "assignPermissionGroups": "Assign permission groups",
+    "assignPermissionGroupsDesc": "Select which permission groups this role has. Expand to see permissions in each group.",
+    "searchPlaceholder": "Search by name or description…",
+    "suggestions": "Suggestions",
+    "noSuggestions": "No matches",
+    "typeToSearch": "Type to search",
+    "searchByKeyword": "Search by keyword \"{{keyword}}\""
   },
   "permissions": {
     "permissions": "Permission",
@@ -110,14 +119,27 @@
     "code": "Code",
     "groupId": "Group ID",
     "createTitle": "Create Permission",
-    "codePlaceholder": "e.g. users:read"
+    "codePlaceholder": "e.g. users:read",
+    "searchPlaceholder": "Search by name or code…",
+    "suggestions": "Suggestions",
+    "noSuggestions": "No matches",
+    "typeToSearch": "Type to search",
+    "searchByKeyword": "Search by keyword \"{{keyword}}\""
   },
   "permissionGroups": {
     "permissionGroups": "Permission Group",
     "title": "Permission Groups",
     "name": "Name",
     "description": "Description",
-    "createTitle": "Create Permission Group"
+    "createTitle": "Create Permission Group",
+    "searchPlaceholder": "Search by name or description…",
+    "suggestions": "Suggestions",
+    "noSuggestions": "No matches",
+    "typeToSearch": "Type to search",
+    "searchByKeyword": "Search by keyword \"{{keyword}}\"",
+    "assignPermissions": "Assign permissions",
+    "assignPermissionsDesc": "Select which permissions belong to this group.",
+    "saveAssignments": "Save assignments"
   },
   "fileUpload": {
     "placeholder": "Drag and drop files here, or click to select",

@@ -244,11 +244,13 @@ export const handlers = [
     const body = (await request.json()) as {
       email: string
       name: string
+      roleIds?: string[]
     }
     const user = {
       id: String(users.length + 1),
       email: body.email ?? '',
       name: body.name ?? '',
+      roleIds: body.roleIds ?? [],
       createdAt: new Date().toISOString(),
     }
     users.push(user)
@@ -264,6 +266,7 @@ export const handlers = [
     const body = (await request.json()) as Partial<{
       email: string
       name: string
+      roleIds: string[]
     }>
     users[idx] = { ...users[idx], ...body }
     return HttpResponse.json(users[idx])
@@ -308,6 +311,7 @@ export const handlers = [
     const body = (await request.json()) as Partial<{
       email: string
       name: string
+      roleIds: string[]
     }>
     const updated = ids
       .map((id) => {
@@ -338,7 +342,133 @@ export const handlers = [
     return HttpResponse.json(deleted)
   }),
 
+  // Roles - custom GET with q search (must be before createCrudHandlers)
+  http.get(`${API_BASE}/roles`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') ?? '1', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
+    const q = url.searchParams.get('q')?.trim()
+
+    let filtered = [...roles]
+    if (q) {
+      const lower = q.toLowerCase()
+      filtered = filtered.filter(
+        (r) =>
+          r.name.toLowerCase().includes(lower) ||
+          (r.description ?? '').toLowerCase().includes(lower)
+      )
+    }
+
+    const start = (page - 1) * pageSize
+    const slice = filtered.slice(start, start + pageSize)
+    return HttpResponse.json(
+      pageResponse(slice, filtered.length, page, pageSize)
+    )
+  }),
   ...createCrudHandlers('/roles', roles, { name: '' }),
-  ...createCrudHandlers('/permissions', permissions, { name: '', code: '' }),
+
+  // Permissions - custom GET with groupId_eq and q filter
+  http.get(`${API_BASE}/permissions`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') ?? '1', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
+    const groupIdEq = url.searchParams.get('groupId_eq')?.trim()
+    const q = url.searchParams.get('q')?.trim()
+
+    let filtered = [...permissions]
+    if (groupIdEq) {
+      filtered = filtered.filter((p) => p.groupId === groupIdEq)
+    }
+    if (q) {
+      const lower = q.toLowerCase()
+      filtered = filtered.filter(
+        (p) =>
+          p.name.toLowerCase().includes(lower) ||
+          p.code.toLowerCase().includes(lower)
+      )
+    }
+
+    const start = (page - 1) * pageSize
+    const slice = filtered.slice(start, start + pageSize)
+    return HttpResponse.json(
+      pageResponse(slice, filtered.length, page, pageSize)
+    )
+  }),
+  http.get(`${API_BASE}/permissions/:id`, ({ request, params }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const item = permissions.find((u) => u.id === params.id)
+    if (!item) return new HttpResponse(null, { status: 404 })
+    return HttpResponse.json(item)
+  }),
+  http.patch(`${API_BASE}/permissions/:id`, async ({ params, request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const idx = permissions.findIndex((u) => u.id === params.id)
+    if (idx === -1) return new HttpResponse(null, { status: 404 })
+    const body = (await request.json()) as Partial<{
+      name: string
+      code: string
+      groupId: string | null
+    }>
+    permissions[idx] = { ...permissions[idx], ...body }
+    return HttpResponse.json(permissions[idx])
+  }),
+  http.patch(`${API_BASE}/permissions/bulk`, async ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const url = new URL(request.url)
+    const ids = url.searchParams.get('id')?.split(',') ?? []
+    const body = (await request.json()) as Partial<{
+      name: string
+      code: string
+      groupId: string | null
+    }>
+    const updated: typeof permissions = []
+    for (const id of ids) {
+      const idx = permissions.findIndex((p) => p.id === id)
+      if (idx !== -1) {
+        permissions[idx] = { ...permissions[idx], ...body }
+        updated.push(permissions[idx])
+      }
+    }
+    return HttpResponse.json(updated)
+  }),
+
+  // Permission groups - custom GET with q search (must be before createCrudHandlers)
+  http.get(`${API_BASE}/permission-groups`, ({ request }) => {
+    if (shouldSimulate401(request)) {
+      return new HttpResponse(null, { status: 401 })
+    }
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') ?? '1', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10)
+    const q = url.searchParams.get('q')?.trim()
+
+    let filtered = [...permissionGroups]
+    if (q) {
+      const lower = q.toLowerCase()
+      filtered = filtered.filter(
+        (g) =>
+          g.name.toLowerCase().includes(lower) ||
+          (g.description ?? '').toLowerCase().includes(lower)
+      )
+    }
+
+    const start = (page - 1) * pageSize
+    const slice = filtered.slice(start, start + pageSize)
+    return HttpResponse.json(
+      pageResponse(slice, filtered.length, page, pageSize)
+    )
+  }),
   ...createCrudHandlers('/permission-groups', permissionGroups, { name: '' }),
 ]

@@ -21,8 +21,6 @@ export const resources: IResourceItem[] = [
   {
     name: 'permissions',
     list: '/permissions',
-    create: '/permissions/create',
-    edit: '/permissions/edit/:id',
     show: '/permissions/show/:id',
     meta: { label: '权限', icon: <Key className="size-4" /> },
   },

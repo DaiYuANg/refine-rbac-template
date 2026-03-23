@@ -1,12 +1,12 @@
+import { useState } from 'react'
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
   ListView,
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
+import { PermissionListFilter } from '@/components/refine-ui/table/permission-list-filter'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
-import { EditButton } from '@/components/refine-ui/buttons/edit'
-import { DeleteButton } from '@/components/refine-ui/buttons/delete'
 import {
   Table,
   TableBody,
@@ -16,13 +16,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { CrudFilters } from '@refinedev/core'
 import type { Permission } from '@/types/permission'
 
 export function PermissionList() {
   const { t } = useTranslation()
+  const [filters, setFilters] = useState<CrudFilters>([])
+
   const { query, result } = useList<Permission>({
     resource: 'permissions',
     pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    filters,
   })
 
   const permissions = Array.isArray(result?.data) ? result.data : []
@@ -30,7 +34,10 @@ export function PermissionList() {
 
   return (
     <ListView>
-      <ListViewHeader resource="permissions" />
+      <ListViewHeader resource="permissions" canCreate={false} />
+      <div className="flex flex-col gap-4">
+        <PermissionListFilter filters={filters} onFiltersChange={setFilters} />
+      </div>
       <div className="rounded-md border">
         {isLoading ? (
           <div className="p-4 space-y-3">
@@ -46,7 +53,7 @@ export function PermissionList() {
                 <TableHead>{t('permissions.name')}</TableHead>
                 <TableHead>{t('permissions.code')}</TableHead>
                 <TableHead>{t('permissions.groupId')}</TableHead>
-                <TableHead className="w-[120px] text-right">
+                <TableHead className="w-[100px] text-right">
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -85,25 +92,12 @@ export function PermissionList() {
                       {perm.groupId ?? '-'}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <ShowButton
-                          resource="permissions"
-                          recordItemId={perm.id}
-                          variant="outline"
-                          size="sm"
-                        />
-                        <EditButton
-                          resource="permissions"
-                          recordItemId={perm.id}
-                          variant="outline"
-                          size="sm"
-                        />
-                        <DeleteButton
-                          resource="permissions"
-                          recordItemId={perm.id}
-                          size="sm"
-                        />
-                      </div>
+                      <ShowButton
+                        resource="permissions"
+                        recordItemId={perm.id}
+                        variant="outline"
+                        size="sm"
+                      />
                     </TableCell>
                   </TableRow>
                 ))

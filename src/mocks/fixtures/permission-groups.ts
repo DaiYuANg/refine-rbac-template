@@ -13,4 +13,10 @@ export const MOCK_PERMISSION_GROUPS: PermissionGroup[] = [
     description: '角色相关权限',
     createdAt: '2024-02-20T14:30:00Z',
   },
+  {
+    id: '3',
+    name: '权限管理',
+    description: '权限与权限组相关',
+    createdAt: '2024-02-20T14:30:00Z',
+  },
 ]

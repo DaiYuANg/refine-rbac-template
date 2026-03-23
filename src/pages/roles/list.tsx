@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useList } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
   ListView,
   ListViewHeader,
 } from '@/components/refine-ui/views/list-view'
+import { RoleListFilter } from '@/components/refine-ui/table/role-list-filter'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { EditButton } from '@/components/refine-ui/buttons/edit'
 import { DeleteButton } from '@/components/refine-ui/buttons/delete'
@@ -16,13 +18,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { CrudFilters } from '@refinedev/core'
 import type { Role } from '@/types/role'
 
 export function RoleList() {
   const { t } = useTranslation()
+  const [filters, setFilters] = useState<CrudFilters>([])
+
   const { query, result } = useList<Role>({
     resource: 'roles',
     pagination: { currentPage: 1, pageSize: 10, mode: 'server' },
+    filters,
   })
 
   const roles = Array.isArray(result?.data) ? result.data : []
@@ -31,6 +37,9 @@ export function RoleList() {
   return (
     <ListView>
       <ListViewHeader resource="roles" />
+      <div className="flex flex-col gap-4">
+        <RoleListFilter filters={filters} onFiltersChange={setFilters} />
+      </div>
       <div className="rounded-md border">
         {isLoading ? (
           <div className="p-4 space-y-3">

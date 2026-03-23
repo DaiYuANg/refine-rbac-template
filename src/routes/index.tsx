@@ -33,16 +33,6 @@ const PermissionList = lazy(() =>
     default: m.PermissionList,
   }))
 )
-const PermissionCreate = lazy(() =>
-  import('@/pages/permissions/create').then((m) => ({
-    default: m.PermissionCreate,
-  }))
-)
-const PermissionEdit = lazy(() =>
-  import('@/pages/permissions/edit').then((m) => ({
-    default: m.PermissionEdit,
-  }))
-)
 const PermissionShow = lazy(() =>
   import('@/pages/permissions/show').then((m) => ({
     default: m.PermissionShow,
@@ -96,8 +86,6 @@ export function AppRoutes() {
         </Route>
         <Route path="permissions">
           <Route index element={<PermissionList />} />
-          <Route path="create" element={<PermissionCreate />} />
-          <Route path="edit/:id" element={<PermissionEdit />} />
           <Route path="show/:id" element={<PermissionShow />} />
         </Route>
         <Route path="permission-groups">

@@ -85,6 +85,8 @@
     "error": "发生错误"
   },
   "users": {
+    "assignRoles": "分配角色",
+    "assignRolesDesc": "选择此用户拥有的角色。",
     "users": "用户",
     "title": "用户",
     "name": "姓名",
@@ -97,6 +99,13 @@
     "searchByKeyword": "按「{{keyword}}」关键字查询"
   },
   "roles": {
+    "assignPermissionGroups": "分配权限组",
+    "assignPermissionGroupsDesc": "选择此角色拥有的权限组。展开可查看各组包含的权限。",
+    "searchPlaceholder": "按名称或描述搜索…",
+    "suggestions": "匹配结果",
+    "noSuggestions": "无匹配",
+    "typeToSearch": "输入以搜索",
+    "searchByKeyword": "按「{{keyword}}」关键字查询",
     "roles": "角色",
     "title": "角色",
     "name": "名称",
@@ -110,9 +119,22 @@
     "code": "编码",
     "groupId": "权限组ID",
     "createTitle": "新建权限",
-    "codePlaceholder": "如 users:read"
+    "codePlaceholder": "如 users:read",
+    "searchPlaceholder": "按名称或编码搜索…",
+    "suggestions": "匹配结果",
+    "noSuggestions": "无匹配",
+    "typeToSearch": "输入以搜索",
+    "searchByKeyword": "按「{{keyword}}」关键字查询"
   },
   "permissionGroups": {
+    "searchPlaceholder": "按名称或描述搜索…",
+    "suggestions": "匹配结果",
+    "noSuggestions": "无匹配",
+    "typeToSearch": "输入以搜索",
+    "searchByKeyword": "按「{{keyword}}」关键字查询",
+    "assignPermissions": "分配权限",
+    "assignPermissionsDesc": "选择归属此权限组的权限项。",
+    "saveAssignments": "保存分配",
     "permissionGroups": "权限组",
     "title": "权限组",
     "name": "名称",
