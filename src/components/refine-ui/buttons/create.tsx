@@ -45,6 +45,7 @@ export const CreateButton = React.forwardRef<
       <LinkComponent
         to={to}
         replace={false}
+        viewTransition
         onClick={(e: React.PointerEvent<HTMLButtonElement>) => {
           if (isDisabled) {
             e.preventDefault()

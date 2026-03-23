@@ -115,7 +115,7 @@ function SidebarNavLink({
       )}
       asChild
     >
-      <Link to={to} className="flex w-full items-center gap-2">
+      <Link to={to} viewTransition className="flex w-full items-center gap-2">
         {icon}
         <span className="line-clamp-1 truncate">{label}</span>
       </Link>
@@ -241,6 +241,7 @@ function SidebarItemDropdown({ item, selectedKey }: MenuItemProps) {
             <DropdownMenuItem key={childKey || child.name} asChild>
               <Link
                 to={child.route || ''}
+                viewTransition
                 className={cn('flex w-full items-center gap-2', {
                   'bg-accent text-accent-foreground': isSelected,
                 })}
@@ -409,7 +410,11 @@ function SidebarButton({
       {...props}
     >
       {asLink && item.route ? (
-        <Link to={item.route} className={cn('flex w-full items-center gap-2')}>
+        <Link
+          to={item.route}
+          viewTransition
+          className={cn('flex w-full items-center gap-2')}
+        >
           {buttonContent}
         </Link>
       ) : (

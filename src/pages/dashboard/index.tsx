@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+import { motion } from '@/components/shared/motion'
 import {
   Bar,
   BarChart,
@@ -64,24 +65,43 @@ export function DashboardPage() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <motion.div
+        className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: { staggerChildren: 0.06 },
+          },
+          hidden: {},
+        }}
+      >
         {statCards.map(({ key, value, labelKey }) => {
           const Icon = STAT_CARD_ICONS[key] ?? Users
           return (
-            <Card key={key}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {t(labelKey)}
-                </CardTitle>
-                <Icon className="size-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-              </CardContent>
-            </Card>
+            <motion.div
+              key={key}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    {t(labelKey)}
+                  </CardTitle>
+                  <Icon className="size-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{value}</div>
+                </CardContent>
+              </Card>
+            </motion.div>
           )
         })}
-      </div>
+      </motion.div>
 
       {/* 图表区域 */}
       <div className="grid gap-6 lg:grid-cols-2">

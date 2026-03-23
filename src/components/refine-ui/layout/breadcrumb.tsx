@@ -33,7 +33,7 @@ export function Breadcrumb() {
       key: 'breadcrumb-item-home',
       href: rootRouteResource.matchedRoute ?? '/',
       Component: (
-        <Link to={rootRouteResource.matchedRoute ?? '/'}>
+        <Link to={rootRouteResource.matchedRoute ?? '/'} viewTransition>
           {rootRouteResource?.resource?.meta?.icon ?? (
             <Home className="h-4 w-4" />
           )}
@@ -45,7 +45,13 @@ export function Breadcrumb() {
       list.push({
         key: `breadcrumb-item-${label}`,
         href: href ?? '',
-        Component: href ? <Link to={href}>{label}</Link> : <span>{label}</span>,
+        Component: href ? (
+          <Link to={href} viewTransition>
+            {label}
+          </Link>
+        ) : (
+          <span>{label}</span>
+        ),
       })
     }
 
