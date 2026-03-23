@@ -15,6 +15,8 @@ import {
   notificationProvider,
   i18nProvider,
 } from '@/providers'
+import { GlobalLoadingBar } from '@/components/shared/global-loading-bar'
+import { NetworkErrorOverlay } from '@/components/shared/network-error-overlay'
 import { ReactQueryDevtoolsPanel } from '@/components/shared/react-query-devtools-panel'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -46,6 +48,8 @@ function App() {
           }}
         >
           <TooltipProvider>
+            <GlobalLoadingBar />
+            <NetworkErrorOverlay />
             <Toaster />
             <ReactQueryDevtoolsPanel />
             <Routes>

@@ -18,6 +18,14 @@ import {
 
 const API_BASE = env.apiBaseUrl
 
+/** ~30% chance to add 500–1200ms delay to simulate slow queries (mock only) */
+async function maybeDelay(): Promise<void> {
+  if (Math.random() < 0.3) {
+    const ms = 500 + Math.random() * 700
+    await new Promise((r) => setTimeout(r, ms))
+  }
+}
+
 const users = [...MOCK_USERS]
 const roles = [...MOCK_ROLES]
 const permissions = [...MOCK_PERMISSIONS]
@@ -193,6 +201,19 @@ function createCrudHandlers<T extends { id: string }>(
 }
 
 export const handlers = [
+  http.get(`${API_BASE}/health`, () => {
+    /** ~5% chance to simulate network/server failure (mock only). Set VITE_MOCK_HEALTH_FAIL_PROB=0 in E2E. */
+    const prob = parseFloat(
+      (import.meta.env.VITE_MOCK_HEALTH_FAIL_PROB as string | undefined) ??
+        '0.05',
+      10
+    )
+    if (Math.random() < prob) {
+      return new HttpResponse(null, { status: 503 })
+    }
+    return HttpResponse.json({ status: 'UP' })
+  }),
+
   http.post(`${API_BASE}/auth/refresh`, () => {
     return HttpResponse.json({
       accessToken: `mock-jwt-token-${Date.now()}`,
@@ -221,7 +242,8 @@ export const handlers = [
     })
   }),
 
-  http.get(`${API_BASE}/dashboard/stats`, ({ request }) => {
+  http.get(`${API_BASE}/dashboard/stats`, async ({ request }) => {
+    await maybeDelay()
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }
@@ -234,7 +256,8 @@ export const handlers = [
   }),
 
   // Users CRUD - README backend API (page, pageSize, PageResponse)
-  http.get(`${API_BASE}/users`, ({ request }) => {
+  http.get(`${API_BASE}/users`, async ({ request }) => {
+    await maybeDelay()
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }
@@ -401,7 +424,8 @@ export const handlers = [
   }),
 
   // Roles - custom GET with q search (must be before createCrudHandlers)
-  http.get(`${API_BASE}/roles`, ({ request }) => {
+  http.get(`${API_BASE}/roles`, async ({ request }) => {
+    await maybeDelay()
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }
@@ -442,7 +466,8 @@ export const handlers = [
   ...createCrudHandlers('/roles', roles, { name: '' }),
 
   // Permissions - custom GET with groupId_eq and q filter
-  http.get(`${API_BASE}/permissions`, ({ request }) => {
+  http.get(`${API_BASE}/permissions`, async ({ request }) => {
+    await maybeDelay()
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }
@@ -529,7 +554,8 @@ export const handlers = [
   }),
 
   // Permission groups - custom GET with q search (must be before createCrudHandlers)
-  http.get(`${API_BASE}/permission-groups`, ({ request }) => {
+  http.get(`${API_BASE}/permission-groups`, async ({ request }) => {
+    await maybeDelay()
     if (shouldSimulate401(request)) {
       return new HttpResponse(null, { status: 401 })
     }

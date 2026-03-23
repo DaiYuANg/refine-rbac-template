@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { InternalAxiosRequestConfig } from 'axios'
 import { API_BASE_URL } from '@/constants'
 import { useSessionStore } from '@/features/auth'
+import { useGlobalLoadingStore } from '@/stores/global-loading-store'
 import { normalizeApiError, type NormalizedApiError } from '@/types/errors'
 import {
   isRefreshRequest,
@@ -20,8 +21,14 @@ const axiosInstance = axios.create({
   },
 })
 
+const isHealthCheck = (config: { url?: string }) =>
+  String(config?.url ?? '').includes('/health')
+
 // Attach auth token and cache-busting timestamp for GET requests
 axiosInstance.interceptors.request.use((config) => {
+  if (!isHealthCheck(config)) {
+    useGlobalLoadingStore.getState().increment()
+  }
   if (!isRefreshRequest(config as Parameters<typeof isRefreshRequest>[0])) {
     const token = useSessionStore.getState().token
     if (token) {
@@ -33,6 +40,23 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config
 })
+
+// Decrement loading count on response (success or error)
+const decrementLoading = (config: { url?: string }) => {
+  if (!isHealthCheck(config ?? {})) {
+    useGlobalLoadingStore.getState().decrement()
+  }
+}
+axiosInstance.interceptors.response.use(
+  (response) => {
+    decrementLoading(response.config ?? {})
+    return response
+  },
+  (error) => {
+    decrementLoading(error?.config ?? {})
+    return Promise.reject(error)
+  }
+)
 
 // On 401: refresh token (cookie) -> new access token -> retry failed request
 axiosInstance.interceptors.response.use(

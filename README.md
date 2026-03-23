@@ -128,12 +128,13 @@ src/
 
 All env access goes through `src/config`:
 
-| Variable                | Default                        | Description                   |
-| ----------------------- | ------------------------------ | ----------------------------- |
-| `VITE_API_URL`          | `/api`                         | API base URL                  |
-| `VITE_AUTH_REFRESH_URL` | `${VITE_API_URL}/auth/refresh` | Refresh token endpoint        |
-| `VITE_USE_MOCK`         | (dev)                          | `true` to enable MSW in build |
-| `VITE_MOCK_401_PROB`    | `0.15`                         | E2E: set `0` for stable tests |
+| Variable                     | Default                        | Description                                     |
+| ---------------------------- | ------------------------------ | ----------------------------------------------- |
+| `VITE_API_URL`               | `/api`                         | API base URL                                    |
+| `VITE_AUTH_REFRESH_URL`      | `${VITE_API_URL}/auth/refresh` | Refresh token endpoint                          |
+| `VITE_USE_MOCK`              | (dev)                          | `true` to enable MSW in build                   |
+| `VITE_MOCK_401_PROB`         | `0.15`                         | E2E: set `0` for stable tests                   |
+| `VITE_MOCK_HEALTH_FAIL_PROB` | `0.05`                         | Mock: health check failure rate; set `0` in E2E |
 
 ---
 
@@ -225,6 +226,22 @@ Endpoints like `/me`, `/dashboard/stats` are called via `dataProvider.custom`. R
 ### Backend Business Adaptation Rules
 
 This section documents the **business-specific** API expectations for this RBAC template. Backend implementers must provide these endpoints and structures for full feature parity.
+
+#### 0. Health Check — `GET /health`
+
+**Optional but recommended.** Polled every 5 seconds to detect network/server outages. When the request fails or `status !== "UP"`, the frontend shows a global "网络异常" overlay.
+
+**Request**: `GET {apiBaseUrl}/health`
+
+**Response**:
+
+```ts
+{
+  status: 'UP'
+}
+```
+
+- Any other `status` value or request failure triggers the overlay. No auth required.
 
 #### 1. Auth & Current User — `GET /me`
 
@@ -443,6 +460,7 @@ export interface NormalizedApiError {
 
 MSW is used in development. Handlers simulate:
 
+- Health check (`/health`) — returns `{ status: "UP" }`
 - Login, current user (`/me`) — different users return different permissions based on login username
 - Users, roles, permissions, permission-groups CRUD
 - Dashboard stats (`/dashboard/stats`)

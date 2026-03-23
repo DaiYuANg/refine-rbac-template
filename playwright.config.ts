@@ -20,6 +20,7 @@ export default defineConfig({
     env: {
       VITE_USE_MOCK: 'true',
       VITE_MOCK_401_PROB: '0',
+      VITE_MOCK_HEALTH_FAIL_PROB: '0',
     },
   },
 })
