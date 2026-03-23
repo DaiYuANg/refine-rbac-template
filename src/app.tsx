@@ -8,10 +8,12 @@ import {
   Routes,
 } from 'react-router-dom'
 import { LayoutDashboard } from 'lucide-react'
+import { env } from '@/config'
 import {
   dataProviderInstance,
   authProvider,
   accessControlProvider,
+  auditLogProvider,
   notificationProvider,
   i18nProvider,
 } from '@/providers'
@@ -35,6 +37,7 @@ function App() {
           dataProvider={dataProviderInstance}
           authProvider={authProvider}
           accessControlProvider={accessControlProvider}
+          auditLogProvider={env.enableAuditLog ? auditLogProvider : undefined}
           notificationProvider={notificationProvider}
           i18nProvider={i18nProvider}
           routerProvider={routerProvider}

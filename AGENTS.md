@@ -29,7 +29,7 @@ Agents must use and preserve the following stack choices:
 - HTTP client: axios
 - Server state: @tanstack/react-query
 - Client state: zustand
-- Mock API solution: MSW
+- Mock API solution: vite-plugin-mock-dev-server
 - Code quality tools: eslint, prettier, husky, lint-staged
 
 Do not replace these with alternatives unless explicitly instructed.
@@ -208,12 +208,12 @@ If backend payloads differ, adapt them in the data provider or adapter layer.
 
 ## Mock Rules
 
-This repository uses **MSW** as the default mock solution.
+This repository uses **vite-plugin-mock-dev-server** as the default mock solution.
 
 ### Mandatory rules
 
 1. Local development must support running the application against mock APIs.
-2. Mock handlers must simulate real HTTP behavior instead of bypassing the request layer.
+2. Mock handlers (in `mock/*.mock.ts`) must simulate real HTTP behavior via the plugin's dev server.
 3. Mock payloads should match typed DTO contracts as closely as possible.
 4. New pages and new features should remain runnable with mock APIs when the real backend is unavailable.
 5. Mocking must work with the same data access flow used by the real application.
@@ -538,9 +538,8 @@ src/
     users/
     roles/
   mocks/
-    handlers/
     fixtures/
-    browser.ts
+  mock/               # vite-plugin-mock-dev-server (*.mock.ts)
   app.tsx
   main.tsx
 ```
@@ -554,7 +553,7 @@ src/
 - `components/ui/` stores shadcn/ui primitives or wrappers.
 - `components/shared/` stores reusable business-level shared components.
 - `stores/` stores zustand state.
-- `mocks/` stores MSW handlers, fixtures, and setup files.
+- `mocks/` stores fixtures used by mock server and pages. Mock handlers live in `mock/` (vite-plugin-mock-dev-server).
 - `config/` stores typed environment and runtime configuration modules.
 
 ---

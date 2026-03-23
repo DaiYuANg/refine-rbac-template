@@ -2,7 +2,7 @@
 
 [English](./README.md) | 中文
 
-基于 **Refine**、**React**、**TypeScript** 和 **shadcn/ui** 构建的前端 RBAC（基于角色的访问控制）模板。后端无关，开箱即用 MSW 本地 mock API。
+基于 **Refine**、**React**、**TypeScript** 和 **shadcn/ui** 构建的前端 RBAC（基于角色的访问控制）模板。后端无关，开箱即用 mock API 本地开发。
 
 ## 功能
 
@@ -12,7 +12,7 @@
 - **shadcn/ui** — 表单配合 React Hook Form、zod 校验
 - **i18n** — 英文与中文
 - **仪表盘** — 统计卡片、图表（Recharts）
-- **MSW** — 无后端本地开发 mock API
+- **vite-plugin-mock-dev-server** — 无后端本地开发 mock API
 - **Vite 8** — 路由级代码分割、vendor 分包、仅 dev 插件
 
 ## 技术栈
@@ -24,7 +24,7 @@
 | 数据 | TanStack React Query, axios               |
 | 状态 | zustand（客户端）, React Query（服务端）  |
 | 表单 | react-hook-form, zod, @hookform/resolvers |
-| Mock | MSW                                       |
+| Mock | vite-plugin-mock-dev-server               |
 | i18n | i18next, react-i18next                    |
 
 ## 快速开始
@@ -46,7 +46,7 @@ pnpm install
 pnpm dev
 ```
 
-使用 MSW mock API 启动应用。可用以下用户名测试不同权限：
+使用 mock API 启动应用。可用以下用户名测试不同权限：
 
 | 用户名                 | 角色       | 权限                |
 | ---------------------- | ---------- | ------------------- |
@@ -70,21 +70,22 @@ pnpm preview
 
 ## 脚本
 
-| 命令                | 说明                   |
-| ------------------- | ---------------------- |
-| `pnpm dev`          | 启动开发服务（含 MSW） |
-| `pnpm build`        | 生产构建               |
-| `pnpm preview`      | 预览生产构建           |
-| `pnpm lint`         | 运行 ESLint            |
-| `pnpm lint:fix`     | ESLint 自动修复        |
-| `pnpm format`       | Prettier 格式化        |
-| `pnpm typecheck`    | TypeScript 检查        |
-| `pnpm docker:build` | 构建 Docker 镜像       |
-| `pnpm docker:run`   | 运行容器（端口 8080）  |
+| 命令                | 说明                        |
+| ------------------- | --------------------------- |
+| `pnpm dev`          | 启动开发服务（含 mock API） |
+| `pnpm build`        | 生产构建                    |
+| `pnpm preview`      | 预览生产构建                |
+| `pnpm lint`         | 运行 ESLint                 |
+| `pnpm lint:fix`     | ESLint 自动修复             |
+| `pnpm format`       | Prettier 格式化             |
+| `pnpm typecheck`    | TypeScript 检查             |
+| `pnpm docker:build` | 构建 Docker 镜像            |
+| `pnpm docker:run`   | 运行容器（端口 8080）       |
 
 ## 项目结构
 
 ```
+mock/                # vite-plugin-mock-dev-server handlers (*.mock.ts)
 src/
 ├── components/
 │   ├── ui/           # shadcn/ui 组件
@@ -94,7 +95,7 @@ src/
 ├── constants/        # 路由、资源
 ├── features/         # 领域模块（auth, rbac, users, roles）
 ├── hooks/
-├── mocks/            # MSW handlers、fixtures
+├── mocks/            # Fixtures（mock 与页面共用）
 ├── pages/            # 页面
 ├── providers/        # Refine 提供者（auth, data, access, i18n, notification）
 │   └── data-provider/
@@ -112,11 +113,14 @@ src/
 
 所有环境变量通过 `src/config` 统一访问：
 
-| 变量                    | 默认值                         | 说明                        |
-| ----------------------- | ------------------------------ | --------------------------- |
-| `VITE_API_URL`          | `/api`                         | API 根路径                  |
-| `VITE_AUTH_REFRESH_URL` | `${VITE_API_URL}/auth/refresh` | Refresh token 接口地址      |
-| `VITE_USE_MOCK`         | (dev)                          | `true` 时构建环境也可用 MSW |
+| 变量                         | 默认值                         | 说明                                |
+| ---------------------------- | ------------------------------ | ----------------------------------- |
+| `VITE_API_URL`               | `/api`                         | API 根路径                          |
+| `VITE_AUTH_REFRESH_URL`      | `${VITE_API_URL}/auth/refresh` | Refresh token 接口地址              |
+| `VITE_USE_MOCK`              | (dev)                          | `true` 时构建环境启用 mock          |
+| `VITE_MOCK_401_PROB`         | `0.15`                         | Mock 401 概率，E2E 建议设 `0`       |
+| `VITE_MOCK_HEALTH_FAIL_PROB` | `0.05`                         | Mock 健康检查失败率，E2E 建议设 `0` |
+| `VITE_ENABLE_AUDIT_LOG`      | —                              | `true` 时启用 Refine 审计日志       |
 
 ---
 
@@ -431,7 +435,7 @@ export interface NormalizedApiError {
 - 仪表盘统计（`/dashboard/stats`）
 - 分页、筛选（如用户列表 `q` 搜索）
 
-详见 `src/mocks/handlers`、`src/mocks/fixtures` 及 `src/mocks/fixtures/mock-identities.ts`。Mock 响应符合后端 API 规范（PageResponse 等）。
+详见 `mock/` 与 `src/mocks/fixtures/`（含 `mock-identities.ts`）。Mock 响应符合后端 API 规范（PageResponse 等）。
 
 ## Docker
 

@@ -12,7 +12,7 @@ A frontend RBAC (Role-Based Access Control) template built with **Refine**, **Re
 - **shadcn/ui** — forms with React Hook Form, zod validation
 - **i18n** — English & 中文
 - **Dashboard** — stats cards, charts (Recharts)
-- **MSW** — mock API for local dev without backend
+- **vite-plugin-mock-dev-server** — mock API for local dev without backend
 - **Vite 8** — route code-splitting, vendor chunks, dev-only plugins
 
 ## Tech Stack
@@ -24,7 +24,7 @@ A frontend RBAC (Role-Based Access Control) template built with **Refine**, **Re
 | Data      | TanStack React Query, axios               |
 | State     | zustand (client), React Query (server)    |
 | Forms     | react-hook-form, zod, @hookform/resolvers |
-| Mock API  | MSW                                       |
+| Mock API  | vite-plugin-mock-dev-server               |
 | i18n      | i18next, react-i18next                    |
 
 ## Getting Started
@@ -46,7 +46,7 @@ pnpm install
 pnpm dev
 ```
 
-Runs the app with MSW mock API. Use these usernames to test different permissions:
+Runs the app with mock API (vite-plugin-mock-dev-server). Use these usernames to test different permissions:
 
 | Username               | Role       | Permissions                       |
 | ---------------------- | ---------- | --------------------------------- |
@@ -70,24 +70,24 @@ pnpm preview
 
 ## Scripts
 
-| Command                 | Description               |
-| ----------------------- | ------------------------- |
-| `pnpm dev`              | Start dev server with MSW |
-| `pnpm build`            | Production build          |
-| `pnpm preview`          | Preview production build  |
-| `pnpm lint`             | Run ESLint                |
-| `pnpm lint:fix`         | Run ESLint with auto-fix  |
-| `pnpm format`           | Format with Prettier      |
-| `pnpm typecheck`        | TypeScript check          |
-| `pnpm docker:build`     | Build Docker image        |
-| `pnpm docker:run`       | Run container (port 8080) |
-| `pnpm test:e2e`         | Run Playwright E2E tests  |
-| `pnpm test:e2e:ui`      | E2E tests with UI mode    |
-| `pnpm test:e2e:install` | Install Chromium for E2E  |
+| Command                 | Description                    |
+| ----------------------- | ------------------------------ |
+| `pnpm dev`              | Start dev server with mock API |
+| `pnpm build`            | Production build               |
+| `pnpm preview`          | Preview production build       |
+| `pnpm lint`             | Run ESLint                     |
+| `pnpm lint:fix`         | Run ESLint with auto-fix       |
+| `pnpm format`           | Format with Prettier           |
+| `pnpm typecheck`        | TypeScript check               |
+| `pnpm docker:build`     | Build Docker image             |
+| `pnpm docker:run`       | Run container (port 8080)      |
+| `pnpm test:e2e`         | Run Playwright E2E tests       |
+| `pnpm test:e2e:ui`      | E2E tests with UI mode         |
+| `pnpm test:e2e:install` | Install Chromium for E2E       |
 
 ### E2E Testing (Playwright)
 
-Run end-to-end tests with Playwright. Uses MSW mock API (`VITE_USE_MOCK=true`).
+Run end-to-end tests with Playwright. Uses mock API (`VITE_USE_MOCK=true`).
 
 ```bash
 pnpm test:e2e:install   # One-time: install Chromium
@@ -101,6 +101,7 @@ Tests live in `e2e/`. The dev server starts automatically with mock mode during 
 
 ```
 e2e/                 # Playwright E2E tests
+mock/                # vite-plugin-mock-dev-server handlers (*.mock.ts)
 src/
 ├── components/
 │   ├── ui/           # shadcn/ui primitives
@@ -110,7 +111,7 @@ src/
 ├── constants/        # Routes, resources
 ├── features/         # Domain modules (auth, rbac, users, roles)
 ├── hooks/
-├── mocks/            # MSW handlers, fixtures
+├── mocks/            # Fixtures (used by mock server and pages)
 ├── pages/            # Route pages
 ├── providers/        # Refine providers (auth, data, access, i18n, notification)
 │   └── data-provider/
@@ -132,9 +133,10 @@ All env access goes through `src/config`:
 | ---------------------------- | ------------------------------ | ----------------------------------------------- |
 | `VITE_API_URL`               | `/api`                         | API base URL                                    |
 | `VITE_AUTH_REFRESH_URL`      | `${VITE_API_URL}/auth/refresh` | Refresh token endpoint                          |
-| `VITE_USE_MOCK`              | (dev)                          | `true` to enable MSW in build                   |
+| `VITE_USE_MOCK`              | (dev)                          | `true` to enable mock in build                  |
 | `VITE_MOCK_401_PROB`         | `0.15`                         | E2E: set `0` for stable tests                   |
 | `VITE_MOCK_HEALTH_FAIL_PROB` | `0.05`                         | Mock: health check failure rate; set `0` in E2E |
+| `VITE_ENABLE_AUDIT_LOG`      | —                              | `true` to enable Refine audit log provider      |
 
 ---
 
@@ -466,7 +468,7 @@ MSW is used in development. Handlers simulate:
 - Dashboard stats (`/dashboard/stats`)
 - Pagination, filtering (e.g. user list `q` search)
 
-See `src/mocks/handlers`, `src/mocks/fixtures`, and `src/mocks/fixtures/mock-identities.ts` for mock user definitions. Mock responses follow the Backend API Spec (PageResponse, etc.).
+See `mock/` and `src/mocks/fixtures/` (including `mock-identities.ts`) for mock definitions. Mock responses follow the Backend API Spec (PageResponse, etc.).
 
 ## Docker
 

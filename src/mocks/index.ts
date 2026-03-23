@@ -1,2 +1,5 @@
-export { worker } from './browser'
-export { handlers } from './handlers'
+/**
+ * Mock fixtures - used by mock server (mock/*.mock.ts) and dashboard page.
+ * Re-exports for convenience.
+ */
+export * from './fixtures'

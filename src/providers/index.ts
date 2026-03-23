@@ -1,5 +1,6 @@
 export { dataProviderInstance, httpClient } from './data-provider'
 export { authProvider } from './auth-provider'
 export { accessControlProvider } from './access-control-provider'
+export { auditLogProvider } from './audit-log-provider'
 export { notificationProvider } from './notification-provider'
 export { i18nProvider } from './i18n-provider'

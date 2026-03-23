@@ -6,7 +6,7 @@
 
 const raw = import.meta.env
 
-/** Whether to use MSW mock API. When true, requests are intercepted by mock handlers. */
+/** Whether to use mock API (vite-plugin-mock-dev-server). Dev default true, or VITE_USE_MOCK=true. */
 export const useMock =
   (raw.VITE_USE_MOCK as string | undefined) === 'true' || raw.DEV === true
 
@@ -16,6 +16,10 @@ const apiBaseUrl = (raw.VITE_API_URL as string | undefined)?.trim() ?? '/api'
 const authRefreshUrl =
   (raw.VITE_AUTH_REFRESH_URL as string | undefined)?.trim() ||
   `${apiBaseUrl}/auth/refresh`
+
+/** Enable Refine audit log provider. When true, CRUD operations are logged. */
+const enableAuditLog =
+  (raw.VITE_ENABLE_AUDIT_LOG as string | undefined) === 'true'
 
 if (raw.PROD === true && !useMock && !apiBaseUrl) {
   throw new Error(
@@ -41,6 +45,9 @@ export const env = {
 
   /** Whether to run MSW mock API (dev default true, or VITE_USE_MOCK=true) */
   useMock,
+
+  /** Whether to enable Refine audit log provider (VITE_ENABLE_AUDIT_LOG=true) */
+  enableAuditLog,
 } as const
 
 export type EnvConfig = typeof env
