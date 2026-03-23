@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react'
+import { type SubmitEventHandler, useState } from 'react'
 import { Authenticated, useLogin } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
@@ -11,13 +11,13 @@ import { ROUTES } from '@/constants/routes'
 import i18n from '@/i18n'
 import { cn } from '@/lib/utils'
 
-function LoginForm() {
+const LoginForm = () => {
   const { t } = useTranslation()
   const { mutate: login, isPending } = useLogin()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     login({ username, password })
   }
@@ -83,18 +83,16 @@ function LoginForm() {
 }
 
 /** 未登录默认入口；已登录访问 /login 时回到首页。 */
-export function LoginPage() {
-  return (
-    <Authenticated
-      key="login-page-guard"
-      loading={
-        <div className="flex min-h-svh items-center justify-center text-muted-foreground">
-          {i18n.t('common.loading')}
-        </div>
-      }
-      fallback={<LoginForm />}
-    >
-      <Navigate to={ROUTES.home} replace />
-    </Authenticated>
-  )
-}
+export const LoginPage = () => (
+  <Authenticated
+    key="login-page-guard"
+    loading={
+      <div className="flex min-h-svh items-center justify-center text-muted-foreground">
+        {i18n.t('common.loading')}
+      </div>
+    }
+    fallback={<LoginForm />}
+  >
+    <Navigate to={ROUTES.home} replace />
+  </Authenticated>
+)

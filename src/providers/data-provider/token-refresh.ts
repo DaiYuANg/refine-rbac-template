@@ -14,17 +14,16 @@ const REFRESH_URL = env.authRefreshUrl
 /** Custom config to mark refresh request - avoid retry loop */
 export const IS_REFRESH_REQUEST = Symbol('isRefreshRequest')
 
-export function isRefreshRequest(config: InternalAxiosRequestConfig): boolean {
-  return Boolean(
+export const isRefreshRequest = (config: InternalAxiosRequestConfig): boolean =>
+  Boolean(
     (config as InternalAxiosRequestConfig & { [IS_REFRESH_REQUEST]?: boolean })[
       IS_REFRESH_REQUEST
     ]
   )
-}
 
-export function markAsRefreshRequest(
+export const markAsRefreshRequest = (
   config: InternalAxiosRequestConfig
-): InternalAxiosRequestConfig {
+): InternalAxiosRequestConfig => {
   ;(config as InternalAxiosRequestConfig & { [IS_REFRESH_REQUEST]?: boolean })[
     IS_REFRESH_REQUEST
   ] = true
@@ -39,7 +38,7 @@ type QueuedRequest = {
 let refreshPromise: Promise<string | null> | null = null
 const failedQueue: QueuedRequest[] = []
 
-function processQueue(newToken: string | null, error: unknown = null) {
+const processQueue = (newToken: string | null, error: unknown = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error)
@@ -56,9 +55,9 @@ function processQueue(newToken: string | null, error: unknown = null) {
  * Call POST /auth/refresh with credentials (cookie). Backend returns new accessToken.
  * Deduplicates concurrent refresh calls - all waiters get the same result.
  */
-export async function refreshAccessToken(axiosInstance: {
+export const refreshAccessToken = async (axiosInstance: {
   request: (config: InternalAxiosRequestConfig) => Promise<unknown>
-}): Promise<string | null> {
+}): Promise<string | null> => {
   if (refreshPromise) {
     return refreshPromise
   }
@@ -98,8 +97,7 @@ export async function refreshAccessToken(axiosInstance: {
  * Queue a failed request to retry after refresh. Returns a promise that resolves
  * with the new token when refresh succeeds, or rejects when refresh fails.
  */
-export function queueForRetry(): Promise<string> {
-  return new Promise((resolve, reject) => {
+export const queueForRetry = (): Promise<string> =>
+  new Promise((resolve, reject) => {
     failedQueue.push({ resolve, reject })
   })
-}

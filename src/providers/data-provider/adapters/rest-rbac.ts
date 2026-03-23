@@ -15,11 +15,11 @@ const OP_SUFFIX: Record<string, string> = {
   contains: '_like',
 }
 
-function mapOperator(op: string): string {
-  return OP_SUFFIX[op] ?? ''
-}
+const mapOperator = (op: string): string => OP_SUFFIX[op] ?? ''
 
-function buildFilters(filters?: CrudFilter[]): Record<string, string | number> {
+const buildFilters = (
+  filters?: CrudFilter[]
+): Record<string, string | number> => {
   const out: Record<string, string | number> = {}
   if (!filters?.length) return out
   for (const f of filters) {
@@ -37,7 +37,7 @@ function buildFilters(filters?: CrudFilter[]): Record<string, string | number> {
   return out
 }
 
-function buildSort(sorters?: CrudSort[]): { sort?: string; order?: string } {
+const buildSort = (sorters?: CrudSort[]): { sort?: string; order?: string } => {
   if (!sorters?.length) return {}
   const sort = sorters.map((s) => s.field).join(',')
   const order = sorters.map((s) => s.order).join(',')
@@ -52,7 +52,7 @@ export interface RestRbacListParams {
 }
 
 /** Build query string: page, pageSize (1-based), filters, sort */
-export function buildRestRbacListQuery(params: RestRbacListParams): string {
+export const buildRestRbacListQuery = (params: RestRbacListParams): string => {
   const { pagination, filters, sorters } = params
   const query: Record<string, string | number> = {
     page: pagination.page,
@@ -66,9 +66,9 @@ export function buildRestRbacListQuery(params: RestRbacListParams): string {
 }
 
 /** Parse backend PageResponse or array → Refine GetListResponse */
-export function fromRestRbacListResponse<T>(
+export const fromRestRbacListResponse = <T>(
   data: T[] | { items?: T[]; total?: number; page?: number; pageSize?: number }
-): { data: T[]; total: number } {
+): { data: T[]; total: number } => {
   if (Array.isArray(data)) {
     return { data, total: data.length }
   }

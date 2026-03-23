@@ -13,13 +13,13 @@ export type SortableTableHeadProps = {
   className?: string
 }
 
-export function SortableTableHead({
+export const SortableTableHead = ({
   children,
   field,
   sorters,
   onSort,
   className,
-}: SortableTableHeadProps) {
+}: SortableTableHeadProps) => {
   const current = sorters.find((s) => s.field === field)
   const order = current?.order ?? null
 

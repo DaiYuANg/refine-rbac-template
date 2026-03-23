@@ -6,7 +6,7 @@ import { useGlobalLoadingStore } from '@/stores/global-loading-store'
  * Thin progress bar at top of viewport when any API request is in progress.
  * Uses shadcn design tokens for consistency.
  */
-export function GlobalLoadingBar() {
+export const GlobalLoadingBar = () => {
   const count = useGlobalLoadingStore((s) => s.count)
   const visible = count > 0
 

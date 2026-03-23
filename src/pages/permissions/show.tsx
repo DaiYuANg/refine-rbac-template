@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { Permission } from '@/types/permission'
 import type { PermissionGroup } from '@/types/permission-group'
 
-export function PermissionShow() {
+export const PermissionShow = () => {
   const { t } = useTranslation()
   const { query } = useShow<Permission>({ resource: 'permissions' })
   const perm = query?.data?.data

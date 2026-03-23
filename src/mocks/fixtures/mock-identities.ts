@@ -74,7 +74,7 @@ const DEFAULT_IDENTITY = MOCK_IDENTITIES['admin@example.com']!
 /**
  * Resolve identity by username. Falls back to admin if unknown.
  */
-export function getMockIdentityByUsername(username: string): MockIdentity {
+export const getMockIdentityByUsername = (username: string): MockIdentity => {
   const key = username.trim().toLowerCase()
   return MOCK_IDENTITIES[key] ?? DEFAULT_IDENTITY
 }

@@ -41,7 +41,7 @@ const permissionGroupSchema = z.object({
 
 type PermissionGroupFormValues = z.infer<typeof permissionGroupSchema>
 
-export function PermissionGroupEdit() {
+export const PermissionGroupEdit = () => {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const groupId = id ?? ''

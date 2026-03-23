@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { PermissionGroup } from '@/types/permission-group'
 import type { Permission } from '@/types/permission'
 
-export function PermissionGroupShow() {
+export const PermissionGroupShow = () => {
   const { t } = useTranslation()
   const { query } = useShow<PermissionGroup>({ resource: 'permission-groups' })
   const group = query?.data?.data

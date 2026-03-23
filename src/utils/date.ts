@@ -30,10 +30,10 @@ export type DateFormatKey = keyof typeof DATE_FORMATS
  * Format a date value for display.
  * Accepts Date, string (ISO), number (timestamp), or Dayjs.
  */
-export function formatDate(
+export const formatDate = (
   value: Date | string | number | Dayjs | null | undefined,
   format: DateFormatKey | string = 'date'
-): string {
+): string => {
   if (value == null) return ''
   const d = dayjs(value)
   return d.isValid()

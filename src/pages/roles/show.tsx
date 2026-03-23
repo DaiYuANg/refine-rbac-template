@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Role } from '@/types/role'
 import type { PermissionGroup } from '@/types/permission-group'
 
-export function RoleShow() {
+export const RoleShow = () => {
   const { t } = useTranslation()
   const { query } = useShow<Role>({ resource: 'roles' })
   const role = query?.data?.data

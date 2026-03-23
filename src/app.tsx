@@ -29,54 +29,52 @@ import { ROUTES } from '@/constants/routes'
 import { LoginPage } from '@/pages/login'
 import { AppRoutes } from '@/routes'
 
-function App() {
-  return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Refine
-          dataProvider={dataProviderInstance}
-          authProvider={authProvider}
-          accessControlProvider={accessControlProvider}
-          auditLogProvider={env.enableAuditLog ? auditLogProvider : undefined}
-          notificationProvider={notificationProvider}
-          i18nProvider={i18nProvider}
-          routerProvider={routerProvider}
-          resources={resources}
-          options={{
-            syncWithLocation: true,
-            title: {
-              icon: <LayoutDashboard className="size-6" />,
-              text: 'RBAC Template',
-            },
-          }}
-        >
-          <TooltipProvider>
-            <GlobalLoadingBar />
-            <NetworkErrorOverlay />
-            <Toaster />
-            <ReactQueryDevtoolsPanel />
-            <Routes>
-              <Route path={ROUTES.login} element={<LoginPage />} />
-              <Route
-                element={
-                  <Authenticated
-                    key="authenticated"
-                    fallback={<Navigate to={ROUTES.login} replace />}
-                  >
-                    <Layout>
-                      <Outlet />
-                    </Layout>
-                  </Authenticated>
-                }
-              >
-                <Route path="*" element={<AppRoutes />} />
-              </Route>
-            </Routes>
-          </TooltipProvider>
-        </Refine>
-      </ThemeProvider>
-    </BrowserRouter>
-  )
-}
+const App = () => (
+  <BrowserRouter>
+    <ThemeProvider>
+      <Refine
+        dataProvider={dataProviderInstance}
+        authProvider={authProvider}
+        accessControlProvider={accessControlProvider}
+        auditLogProvider={env.enableAuditLog ? auditLogProvider : undefined}
+        notificationProvider={notificationProvider}
+        i18nProvider={i18nProvider}
+        routerProvider={routerProvider}
+        resources={resources}
+        options={{
+          syncWithLocation: true,
+          title: {
+            icon: <LayoutDashboard className="size-6" />,
+            text: 'RBAC Template',
+          },
+        }}
+      >
+        <TooltipProvider>
+          <GlobalLoadingBar />
+          <NetworkErrorOverlay />
+          <Toaster />
+          <ReactQueryDevtoolsPanel />
+          <Routes>
+            <Route path={ROUTES.login} element={<LoginPage />} />
+            <Route
+              element={
+                <Authenticated
+                  key="authenticated"
+                  fallback={<Navigate to={ROUTES.login} replace />}
+                >
+                  <Layout>
+                    <Outlet />
+                  </Layout>
+                </Authenticated>
+              }
+            >
+              <Route path="*" element={<AppRoutes />} />
+            </Route>
+          </Routes>
+        </TooltipProvider>
+      </Refine>
+    </ThemeProvider>
+  </BrowserRouter>
+)
 
 export default App

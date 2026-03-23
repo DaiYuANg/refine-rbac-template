@@ -27,7 +27,7 @@ const roleSchema = z.object({
 
 type RoleFormValues = z.infer<typeof roleSchema>
 
-export function RoleCreate() {
+export const RoleCreate = () => {
   const { t } = useTranslation()
   const form = useForm<Role, HttpError, RoleFormValues>({
     refineCoreProps: {

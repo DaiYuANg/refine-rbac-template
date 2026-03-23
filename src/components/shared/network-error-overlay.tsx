@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-export function NetworkErrorOverlay() {
+export const NetworkErrorOverlay = () => {
   useHealthCheckPolling()
   const isUp = useHealthCheckStore((s) => s.isUp)
   const lastError = useHealthCheckStore((s) => s.lastError)

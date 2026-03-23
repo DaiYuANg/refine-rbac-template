@@ -59,43 +59,39 @@ const PermissionGroupShow = lazy(() =>
   }))
 )
 
-function PageFallback() {
-  return (
-    <div className="flex min-h-[200px] items-center justify-center">
-      <span className="text-muted-foreground text-sm">Loading…</span>
-    </div>
-  )
-}
+const PageFallback = () => (
+  <div className="flex min-h-[200px] items-center justify-center">
+    <span className="text-muted-foreground text-sm">Loading…</span>
+  </div>
+)
 
-export function AppRoutes() {
-  return (
-    <Suspense fallback={<PageFallback />}>
-      <Routes>
-        <Route index element={<DashboardPage />} />
-        <Route path="users">
-          <Route index element={<UserList />} />
-          <Route path="create" element={<UserCreate />} />
-          <Route path="edit/:id" element={<UserEdit />} />
-          <Route path="show/:id" element={<UserShow />} />
-        </Route>
-        <Route path="roles">
-          <Route index element={<RoleList />} />
-          <Route path="create" element={<RoleCreate />} />
-          <Route path="edit/:id" element={<RoleEdit />} />
-          <Route path="show/:id" element={<RoleShow />} />
-        </Route>
-        <Route path="permissions">
-          <Route index element={<PermissionList />} />
-          <Route path="show/:id" element={<PermissionShow />} />
-        </Route>
-        <Route path="permission-groups">
-          <Route index element={<PermissionGroupList />} />
-          <Route path="create" element={<PermissionGroupCreate />} />
-          <Route path="edit/:id" element={<PermissionGroupEdit />} />
-          <Route path="show/:id" element={<PermissionGroupShow />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
-  )
-}
+export const AppRoutes = () => (
+  <Suspense fallback={<PageFallback />}>
+    <Routes>
+      <Route index element={<DashboardPage />} />
+      <Route path="users">
+        <Route index element={<UserList />} />
+        <Route path="create" element={<UserCreate />} />
+        <Route path="edit/:id" element={<UserEdit />} />
+        <Route path="show/:id" element={<UserShow />} />
+      </Route>
+      <Route path="roles">
+        <Route index element={<RoleList />} />
+        <Route path="create" element={<RoleCreate />} />
+        <Route path="edit/:id" element={<RoleEdit />} />
+        <Route path="show/:id" element={<RoleShow />} />
+      </Route>
+      <Route path="permissions">
+        <Route index element={<PermissionList />} />
+        <Route path="show/:id" element={<PermissionShow />} />
+      </Route>
+      <Route path="permission-groups">
+        <Route index element={<PermissionGroupList />} />
+        <Route path="create" element={<PermissionGroupCreate />} />
+        <Route path="edit/:id" element={<PermissionGroupEdit />} />
+        <Route path="show/:id" element={<PermissionGroupShow />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </Suspense>
+)

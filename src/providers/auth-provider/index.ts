@@ -5,12 +5,12 @@ import i18n from '@/i18n'
 import { useAuthStore } from '@/features/rbac'
 import { useSessionStore } from '@/features/auth'
 import type { MeResponse } from '@/features/auth/types'
-import { httpClient } from '../data-provider'
+import { httpClient } from '@/providers'
 
 /** Shared /me fetch: populates RBAC store once per session. Deduplicates concurrent calls. */
 let meFetchPromise: Promise<MeResponse | null> | null = null
 
-async function fetchMeAndPopulateStore(): Promise<MeResponse | null> {
+const fetchMeAndPopulateStore = async (): Promise<MeResponse | null> => {
   const { identity, setMe } = useAuthStore.getState()
   if (identity) return null
 

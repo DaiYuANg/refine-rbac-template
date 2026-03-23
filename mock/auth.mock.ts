@@ -6,7 +6,7 @@ export default defineMock([
   {
     url: '/api/health',
     method: 'GET',
-    response(req, res) {
+    response: (req, res) => {
       if (shouldSimulateHealthFail()) {
         res.statusCode = 503
         res.end()
@@ -25,7 +25,7 @@ export default defineMock([
   {
     url: '/api/me',
     method: 'GET',
-    response(req, res) {
+    response: (req, res) => {
       if (shouldSimulate401(req)) {
         res.statusCode = 401
         res.end()

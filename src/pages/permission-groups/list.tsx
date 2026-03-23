@@ -33,7 +33,7 @@ import { SortableTableHead } from '@/components/shared/sortable-table-head'
 import { normalizeApiError } from '@/types/errors'
 import type { PermissionGroup } from '@/types/permission-group'
 
-export function PermissionGroupList() {
+export const PermissionGroupList = () => {
   const { t } = useTranslation()
   const {
     tableQuery: { isLoading },

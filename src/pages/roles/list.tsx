@@ -33,7 +33,7 @@ import { SortableTableHead } from '@/components/shared/sortable-table-head'
 import { normalizeApiError } from '@/types/errors'
 import type { Role } from '@/types/role'
 
-export function RoleList() {
+export const RoleList = () => {
   const { t } = useTranslation()
   const {
     tableQuery: { isLoading },

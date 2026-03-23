@@ -21,7 +21,7 @@ import { useListDisplayStore } from '@/stores/list-display-store'
 import { SortableTableHead } from '@/components/shared/sortable-table-head'
 import type { Permission } from '@/types/permission'
 
-export function PermissionList() {
+export const PermissionList = () => {
   const { t } = useTranslation()
   const {
     tableQuery: { isLoading },

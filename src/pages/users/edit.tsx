@@ -35,12 +35,12 @@ import type { Role } from '@/types/role'
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
+  email: z.email('Invalid email address'),
 })
 
 type UserFormValues = z.infer<typeof userSchema>
 
-export function UserEdit() {
+export const UserEdit = () => {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const userId = id ?? ''

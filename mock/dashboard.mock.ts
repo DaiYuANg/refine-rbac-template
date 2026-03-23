@@ -7,7 +7,7 @@ import {
 } from '../src/mocks/fixtures/dashboard'
 import { shouldSimulate401 } from './utils'
 
-async function maybeDelay() {
+const maybeDelay = async () => {
   if (Math.random() < 0.3) {
     await new Promise((r) => setTimeout(r, 500 + Math.random() * 700))
   }

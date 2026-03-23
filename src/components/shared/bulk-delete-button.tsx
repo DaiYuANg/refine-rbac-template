@@ -19,13 +19,13 @@ export type BulkDeleteButtonProps = {
   hidden?: boolean
 }
 
-export function BulkDeleteButton({
+export const BulkDeleteButton = ({
   count,
   onConfirm,
   disabled,
   isLoading,
   hidden,
-}: BulkDeleteButtonProps) {
+}: BulkDeleteButtonProps) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 

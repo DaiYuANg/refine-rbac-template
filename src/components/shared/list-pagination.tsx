@@ -29,13 +29,13 @@ export type ListPaginationProps = {
 /** Show at most 5 page numbers around current */
 const PAGE_WINDOW = 2
 
-export function ListPagination({
+export const ListPagination = ({
   currentPage,
   total,
   pageSize,
   onPageChange,
   onPageSizeChange,
-}: ListPaginationProps) {
+}: ListPaginationProps) => {
   const { t } = useTranslation()
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
   const canPrev = currentPage > 1

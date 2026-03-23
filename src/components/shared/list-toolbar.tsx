@@ -9,7 +9,7 @@ export type ListToolbarProps = {
   bulkActions?: React.ReactNode
 }
 
-export function ListToolbar({ bulkActions }: ListToolbarProps) {
+export const ListToolbar = ({ bulkActions }: ListToolbarProps) => {
   const { t } = useTranslation()
   const { showIdColumn, setShowIdColumn } = useListDisplayStore()
 

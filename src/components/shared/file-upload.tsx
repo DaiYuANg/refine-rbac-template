@@ -43,17 +43,16 @@ export interface FileUploadProps {
   placeholder?: string
 }
 
-function isImageType(type: string): boolean {
-  return IMAGE_TYPES.includes(type) || type.startsWith('image/')
-}
+const isImageType = (type: string): boolean =>
+  IMAGE_TYPES.includes(type) || type.startsWith('image/')
 
-function formatFileSize(bytes: number): string {
+const formatFileSize = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-export function FileUpload({
+export const FileUpload = ({
   multiple = false,
   accept,
   maxSize,
@@ -62,7 +61,7 @@ export function FileUpload({
   disabled = false,
   className,
   placeholder,
-}: FileUploadProps) {
+}: FileUploadProps) => {
   const { t } = useTranslation()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = React.useState(false)

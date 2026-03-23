@@ -17,9 +17,9 @@ const MOCK_HEALTH_FAIL_PROB = parseFloat(
 const INITIAL_TOKEN = 'mock-jwt-token'
 const REFRESHED_TOKEN_PREFIX = 'mock-jwt-token-'
 
-export function shouldSimulate401(req: {
+export const shouldSimulate401 = (req: {
   headers?: { authorization?: string; Authorization?: string }
-}): boolean {
+}): boolean => {
   const auth = req.headers?.authorization ?? req.headers?.Authorization ?? ''
   if (!auth.startsWith('Bearer ')) return false
   const token = auth.slice(7).trim()
@@ -31,20 +31,17 @@ export function shouldSimulate401(req: {
   return false
 }
 
-export function shouldSimulateHealthFail(): boolean {
-  return Math.random() < MOCK_HEALTH_FAIL_PROB
-}
+export const shouldSimulateHealthFail = (): boolean =>
+  Math.random() < MOCK_HEALTH_FAIL_PROB
 
-export function pageResponse<T>(
+export const pageResponse = <T>(
   items: T[],
   total: number,
   page: number,
   pageSize: number
-) {
-  return { items, total, page, pageSize }
-}
+) => ({ items, total, page, pageSize })
 
-export function applySort<T>(arr: T[], query: Record<string, unknown>): T[] {
+export const applySort = <T>(arr: T[], query: Record<string, unknown>): T[] => {
   const sortParam = String(query.sort ?? '').trim()
   const orderParam = String(query.order ?? '').trim()
   if (!sortParam || !orderParam) return arr

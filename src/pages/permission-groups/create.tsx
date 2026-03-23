@@ -27,7 +27,7 @@ const permissionGroupSchema = z.object({
 
 type PermissionGroupFormValues = z.infer<typeof permissionGroupSchema>
 
-export function PermissionGroupCreate() {
+export const PermissionGroupCreate = () => {
   const { t } = useTranslation()
   const form = useForm<PermissionGroup, HttpError, PermissionGroupFormValues>({
     refineCoreProps: {

@@ -12,7 +12,7 @@ const POLL_INTERVAL_MS = 5000
 
 export type HealthResponse = { status?: string }
 
-export async function checkHealth(): Promise<void> {
+export const checkHealth = async (): Promise<void> => {
   try {
     const { data } = await httpClient.get<HealthResponse>(HEALTH_CHECK_URL)
     const status = String(data?.status ?? '').toUpperCase()
@@ -29,7 +29,7 @@ export async function checkHealth(): Promise<void> {
   }
 }
 
-export function useHealthCheckPolling(): void {
+export const useHealthCheckPolling = (): void => {
   useEffect(() => {
     void checkHealth()
     const id = setInterval(checkHealth, POLL_INTERVAL_MS)

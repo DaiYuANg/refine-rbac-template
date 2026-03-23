@@ -7,8 +7,8 @@ import SparkMD5 from 'spark-md5'
 
 const CHUNK_SIZE = 2 * 1024 * 1024 // 2MB
 
-export async function computeFileMd5(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
+export const computeFileMd5 = async (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
     const spark = new SparkMD5.ArrayBuffer()
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
     let currentChunk = 0
@@ -33,7 +33,7 @@ export async function computeFileMd5(file: File): Promise<string> {
 
     fileReader.onerror = () => reject(new Error('Failed to read file'))
 
-    function loadNextChunk() {
+    const loadNextChunk = () => {
       const start = currentChunk * CHUNK_SIZE
       const end = Math.min(start + CHUNK_SIZE, file.size)
       fileReader.readAsArrayBuffer(file.slice(start, end))
@@ -45,4 +45,3 @@ export async function computeFileMd5(file: File): Promise<string> {
       loadNextChunk()
     }
   })
-}

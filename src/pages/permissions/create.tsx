@@ -28,7 +28,7 @@ const permissionSchema = z.object({
 
 type PermissionFormValues = z.infer<typeof permissionSchema>
 
-export function PermissionCreate() {
+export const PermissionCreate = () => {
   const { t } = useTranslation()
   const form = useForm<Permission, HttpError, PermissionFormValues>({
     refineCoreProps: {

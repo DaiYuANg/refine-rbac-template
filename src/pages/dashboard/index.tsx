@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell,
+  Sector,
   Legend,
   Area,
   AreaChart,
@@ -40,7 +40,7 @@ const STAT_CARD_ICONS: Record<string, typeof Users> = {
   activeSessions: Activity,
 }
 
-export function DashboardPage() {
+export const DashboardPage = () => {
   const { t } = useTranslation()
   const { data, isLoading } = useDashboardStats()
 
@@ -237,11 +237,16 @@ export function DashboardPage() {
                       )
                     }}
                     labelLine={false}
-                  >
-                    {roleDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
+                    shape={(props) => (
+                      <Sector
+                        {...props}
+                        fill={
+                          (props.payload as { color?: string })?.color ??
+                          props.fill
+                        }
+                      />
+                    )}
+                  />
                   <Tooltip
                     contentStyle={{
                       borderRadius: '8px',

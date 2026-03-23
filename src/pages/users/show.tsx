@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { User } from '@/types/user'
 import type { Role } from '@/types/role'
 
-export function UserShow() {
+export const UserShow = () => {
   const { t } = useTranslation()
   const { query } = useShow<User>({ resource: 'users' })
   const user = query?.data?.data

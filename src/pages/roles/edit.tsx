@@ -47,7 +47,7 @@ const roleSchema = z.object({
 
 type RoleFormValues = z.infer<typeof roleSchema>
 
-export function RoleEdit() {
+export const RoleEdit = () => {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const roleId = id ?? ''

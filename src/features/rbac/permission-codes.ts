@@ -45,10 +45,10 @@ const ADMIN_ROLE_ALT = '管理员'
 /**
  * Returns the required permission code for a resource+action, or undefined if not mapped.
  */
-export function getRequiredPermission(
+export const getRequiredPermission = (
   resource: string,
   action: string
-): PermissionCode | undefined {
+): PermissionCode | undefined => {
   const actions = RESOURCE_ACTION_MAP[resource]
   if (!actions) return undefined
   return actions[action]
@@ -58,12 +58,12 @@ export function getRequiredPermission(
  * Checks if the user has access for the given resource and action.
  * Admin role bypasses all checks.
  */
-export function checkAccess(
+export const checkAccess = (
   userPermissions: PermissionCode[],
   userRoles: { name: string }[],
   resource: string,
   action: string
-): boolean {
+): boolean => {
   const isAdmin = userRoles.some(
     (r) => r.name.toLowerCase() === ADMIN_ROLE || r.name === ADMIN_ROLE_ALT
   )

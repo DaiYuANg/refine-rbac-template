@@ -25,7 +25,7 @@ if (env.isDev) {
  * TanStack Query DevTools — only bundled / loaded in development (env.isDev).
  * Must render under Refine’s QueryClientProvider (inside Refine).
  */
-export function ReactQueryDevtoolsPanel() {
+export const ReactQueryDevtoolsPanel = () => {
   if (!env.isDev) return null
 
   return (

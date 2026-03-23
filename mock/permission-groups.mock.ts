@@ -2,7 +2,7 @@ import { defineMock } from 'vite-plugin-mock-dev-server'
 import { permissionGroups } from './data'
 import { shouldSimulate401, pageResponse, applySort } from './utils'
 
-async function maybeDelay() {
+const maybeDelay = async () => {
   if (Math.random() < 0.3) {
     await new Promise((r) => setTimeout(r, 500 + Math.random() * 700))
   }

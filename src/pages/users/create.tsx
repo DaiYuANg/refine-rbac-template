@@ -22,12 +22,12 @@ import type { User } from '@/types/user'
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
+  email: z.email('Invalid email address'),
 })
 
 type UserFormValues = z.infer<typeof userSchema>
 
-export function UserCreate() {
+export const UserCreate = () => {
   const { t } = useTranslation()
   const form = useForm<User, HttpError, UserFormValues>({
     refineCoreProps: {

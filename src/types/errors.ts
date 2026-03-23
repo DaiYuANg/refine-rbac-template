@@ -17,7 +17,7 @@ export interface NormalizedApiError {
   fieldErrors?: Record<string, string[]>
 }
 
-export function normalizeApiError(error: unknown): NormalizedApiError {
+export const normalizeApiError = (error: unknown): NormalizedApiError => {
   if (error && typeof error === 'object' && 'response' in error) {
     const axiosError = error as {
       response?: { status?: number; data?: unknown }

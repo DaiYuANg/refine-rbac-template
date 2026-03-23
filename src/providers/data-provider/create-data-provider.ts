@@ -41,9 +41,9 @@ export interface CreateDataProviderOptions {
   httpClient: AxiosInstance
 }
 
-export function createDataProvider(
+export const createDataProvider = (
   options: CreateDataProviderOptions
-): DataProvider {
+): DataProvider => {
   const { apiUrl, httpClient } = options
   const base = apiUrl.replace(/\/$/, '')
 

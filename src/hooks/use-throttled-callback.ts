@@ -11,10 +11,10 @@ import { throttle } from 'lodash-es'
  * @param wait - Wait time in milliseconds (default 300)
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useThrottledCallback<T extends (...args: any[]) => any>(
+export const useThrottledCallback = <T extends (...args: any[]) => any>(
   fn: T,
   wait = 300
-): T {
+): T => {
   const fnRef = useRef(fn)
 
   useEffect(() => {
