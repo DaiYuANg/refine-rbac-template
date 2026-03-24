@@ -2,7 +2,7 @@
 
 [English](./README.md) | 中文
 
-基于 **Refine**、**React**、**TypeScript** 和 **shadcn/ui** 构建的前端 RBAC（基于角色的访问控制）模板。后端无关，开箱即用 mock API 本地开发。
+基于 **Refine**、**React**、**TypeScript** 和 **shadcn/ui** 构建的前端 RBAC（基于角色的访问控制）模板。后端无关，开箱即用 **vite-plugin-mock-dev-server** 在本地提供 mock API。
 
 ## 功能
 
@@ -31,8 +31,8 @@
 
 ### 环境要求
 
-- Node.js 18+
-- pnpm 9+
+- Node.js 20+（见 `package.json` 中 `engines`）
+- pnpm 10+（见 `package.json` 中 `packageManager`；推荐使用 Corepack）
 
 ### 安装
 
@@ -46,7 +46,7 @@ pnpm install
 pnpm dev
 ```
 
-使用 mock API 启动应用。可用以下用户名测试不同权限：
+使用 vite-plugin-mock-dev-server 提供的 mock API 启动应用。可用以下用户名测试不同权限：
 
 | 用户名                 | 角色       | 权限                |
 | ---------------------- | ---------- | ------------------- |
@@ -70,17 +70,17 @@ pnpm preview
 
 ## 脚本
 
-| 命令                | 说明                        |
-| ------------------- | --------------------------- |
-| `pnpm dev`          | 启动开发服务（含 mock API） |
-| `pnpm build`        | 生产构建                    |
-| `pnpm preview`      | 预览生产构建                |
-| `pnpm lint`         | 运行 ESLint                 |
-| `pnpm lint:fix`     | ESLint 自动修复             |
-| `pnpm format`       | Prettier 格式化             |
-| `pnpm typecheck`    | TypeScript 检查             |
-| `pnpm docker:build` | 构建 Docker 镜像            |
-| `pnpm docker:run`   | 运行容器（端口 8080）       |
+| 命令                | 说明                                             |
+| ------------------- | ------------------------------------------------ |
+| `pnpm dev`          | 启动开发服务（含 mock API）                      |
+| `pnpm build`        | 生产构建                                         |
+| `pnpm preview`      | 预览生产构建                                     |
+| `pnpm lint`         | 运行 ESLint（含 React Compiler 规则与 jsx-a11y） |
+| `pnpm lint:fix`     | ESLint 自动修复                                  |
+| `pnpm format`       | Prettier 格式化                                  |
+| `pnpm typecheck`    | TypeScript 检查                                  |
+| `pnpm docker:build` | 构建 Docker 镜像                                 |
+| `pnpm docker:run`   | 运行容器（端口 8080）                            |
 
 ## 项目结构
 
@@ -428,8 +428,9 @@ export interface NormalizedApiError {
 
 ## Mock API
 
-开发环境使用 MSW，模拟接口包括：
+开发环境通过 **vite-plugin-mock-dev-server**（`mock/*.mock.ts`）模拟接口，包括：
 
+- 健康检查（`/health`）— 返回 `{ status: "UP" }`
 - 登录、当前用户（`/me`）— 根据登录用户名返回不同权限
 - 用户、角色、权限、权限组 CRUD
 - 仪表盘统计（`/dashboard/stats`）

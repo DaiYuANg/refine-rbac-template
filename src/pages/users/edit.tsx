@@ -153,9 +153,11 @@ export const UserEdit = () => {
                   {roles.map((role: Role) => (
                     <label
                       key={role.id}
+                      htmlFor={`user-edit-role-${role.id}`}
                       className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
                     >
                       <Checkbox
+                        id={`user-edit-role-${role.id}`}
                         checked={selectedRoleIds.has(role.id)}
                         onCheckedChange={(c) =>
                           handleRoleToggle(role.id, c === true)

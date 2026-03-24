@@ -2,7 +2,7 @@
 
 [中文](./README.zh-CN.md) | English
 
-A frontend RBAC (Role-Based Access Control) template built with **Refine**, **React**, **TypeScript**, and **shadcn/ui**. Backend-agnostic, runs locally with MSW mock APIs out of the box.
+A frontend RBAC (Role-Based Access Control) template built with **Refine**, **React**, **TypeScript**, and **shadcn/ui**. Backend-agnostic, runs locally with **vite-plugin-mock-dev-server** mock APIs out of the box.
 
 ## Features
 
@@ -31,8 +31,8 @@ A frontend RBAC (Role-Based Access Control) template built with **Refine**, **Re
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm 9+
+- Node.js 20+ (see `package.json` `engines`)
+- pnpm 10+ (see `packageManager` in `package.json`; Corepack recommended)
 
 ### Install
 
@@ -70,20 +70,20 @@ pnpm preview
 
 ## Scripts
 
-| Command                 | Description                    |
-| ----------------------- | ------------------------------ |
-| `pnpm dev`              | Start dev server with mock API |
-| `pnpm build`            | Production build               |
-| `pnpm preview`          | Preview production build       |
-| `pnpm lint`             | Run ESLint                     |
-| `pnpm lint:fix`         | Run ESLint with auto-fix       |
-| `pnpm format`           | Format with Prettier           |
-| `pnpm typecheck`        | TypeScript check               |
-| `pnpm docker:build`     | Build Docker image             |
-| `pnpm docker:run`       | Run container (port 8080)      |
-| `pnpm test:e2e`         | Run Playwright E2E tests       |
-| `pnpm test:e2e:ui`      | E2E tests with UI mode         |
-| `pnpm test:e2e:install` | Install Chromium for E2E       |
+| Command                 | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `pnpm dev`              | Start dev server with mock API               |
+| `pnpm build`            | Production build                             |
+| `pnpm preview`          | Preview production build                     |
+| `pnpm lint`             | Run ESLint (React Compiler rules + jsx-a11y) |
+| `pnpm lint:fix`         | Run ESLint with auto-fix                     |
+| `pnpm format`           | Format with Prettier                         |
+| `pnpm typecheck`        | TypeScript check                             |
+| `pnpm docker:build`     | Build Docker image                           |
+| `pnpm docker:run`       | Run container (port 8080)                    |
+| `pnpm test:e2e`         | Run Playwright E2E tests                     |
+| `pnpm test:e2e:ui`      | E2E tests with UI mode                       |
+| `pnpm test:e2e:install` | Install Chromium for E2E                     |
 
 ### E2E Testing (Playwright)
 
@@ -460,7 +460,7 @@ export interface NormalizedApiError {
 
 ## Mock API
 
-MSW is used in development. Handlers simulate:
+Local development uses **vite-plugin-mock-dev-server** (`mock/*.mock.ts`). Handlers simulate:
 
 - Health check (`/health`) — returns `{ status: "UP" }`
 - Login, current user (`/me`) — different users return different permissions based on login username

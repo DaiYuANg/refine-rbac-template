@@ -217,9 +217,11 @@ export const PermissionGroupEdit = () => {
                 {permissions.map((perm: Permission) => (
                   <label
                     key={perm.id}
+                    htmlFor={`permission-group-perm-${perm.id}`}
                     className="flex items-center gap-3 rounded-lg border p-3 cursor-pointer hover:bg-muted/50 transition-colors"
                   >
                     <Checkbox
+                      id={`permission-group-perm-${perm.id}`}
                       checked={selectedIds.has(perm.id)}
                       onCheckedChange={(c) =>
                         handlePermissionToggle(perm.id, c === true)

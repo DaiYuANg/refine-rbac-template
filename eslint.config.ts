@@ -5,6 +5,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import type { Linter } from 'eslint'
@@ -24,7 +25,8 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
+      // Includes React Compiler–oriented rules; see eslint-plugin-react-hooks README.
+      reactHooks.configs.flat['recommended-latest'],
       reactRefresh.configs.vite,
     ] as Linter.Config[],
     languageOptions: {
@@ -48,6 +50,11 @@ export default defineConfig([
         },
       ],
     },
+  },
+  // Accessibility: JSX/TSX only (ui/ + refine-ui/ are globalIgnored)
+  {
+    ...jsxA11y.flatConfigs.recommended,
+    files: ['**/*.{jsx,tsx}'],
   },
   // Type-aware rules for src/ only (no-deprecated needs type info)
   {

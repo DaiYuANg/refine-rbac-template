@@ -69,70 +69,67 @@ export const FileUpload = ({
 
   const files = value
 
-  const processFiles = React.useCallback(
-    (newFiles: FileList | File[]) => {
-      const list = Array.from(newFiles)
-      const existing = multiple ? [...files] : []
-      const toAdd: FileWithMd5[] = []
+  const processFiles = (newFiles: FileList | File[]) => {
+    const list = Array.from(newFiles)
+    const existing = multiple ? [...files] : []
+    const toAdd: FileWithMd5[] = []
 
-      for (const file of list) {
-        if (maxSize && file.size > maxSize) {
-          toAdd.push({
-            file,
-            md5: null,
-            error: t('fileUpload.sizeLimitExceeded', {
-              size: formatFileSize(maxSize),
-            }),
-          })
-          continue
-        }
-
-        const preview = isImageType(file.type)
-          ? URL.createObjectURL(file)
-          : undefined
-
+    for (const file of list) {
+      if (maxSize && file.size > maxSize) {
         toAdd.push({
           file,
           md5: null,
-          preview,
+          error: t('fileUpload.sizeLimitExceeded', {
+            size: formatFileSize(maxSize),
+          }),
         })
+        continue
       }
 
-      const merged = multiple ? [...existing, ...toAdd] : toAdd
-      onChange?.(merged)
+      const preview = isImageType(file.type)
+        ? URL.createObjectURL(file)
+        : undefined
 
-      toAdd.forEach((entry) => {
-        if (entry.error) return
-        const { file } = entry
-        const fileKey = `${file.name}_${file.size}_${file.lastModified}`
-
-        setComputingIds((prev) => new Set(prev).add(fileKey))
-        computeFileMd5(file)
-          .then((md5) => {
-            onChange?.((prevFiles) =>
-              prevFiles.map((f) => (f.file === file ? { ...f, md5 } : f))
-            )
-          })
-          .catch(() => {
-            onChange?.((prevFiles) =>
-              prevFiles.map((f) =>
-                f.file === file
-                  ? { ...f, md5: null, error: t('fileUpload.md5Error') }
-                  : f
-              )
-            )
-          })
-          .finally(() => {
-            setComputingIds((prev) => {
-              const next = new Set(prev)
-              next.delete(fileKey)
-              return next
-            })
-          })
+      toAdd.push({
+        file,
+        md5: null,
+        preview,
       })
-    },
-    [files, multiple, maxSize, onChange, t]
-  )
+    }
+
+    const merged = multiple ? [...existing, ...toAdd] : toAdd
+    onChange?.(merged)
+
+    toAdd.forEach((entry) => {
+      if (entry.error) return
+      const { file } = entry
+      const fileKey = `${file.name}_${file.size}_${file.lastModified}`
+
+      setComputingIds((prev) => new Set(prev).add(fileKey))
+      computeFileMd5(file)
+        .then((md5) => {
+          onChange?.((prevFiles) =>
+            prevFiles.map((f) => (f.file === file ? { ...f, md5 } : f))
+          )
+        })
+        .catch(() => {
+          onChange?.((prevFiles) =>
+            prevFiles.map((f) =>
+              f.file === file
+                ? { ...f, md5: null, error: t('fileUpload.md5Error') }
+                : f
+            )
+          )
+        })
+        .finally(() => {
+          setComputingIds((prev) => {
+            const next = new Set(prev)
+            next.delete(fileKey)
+            return next
+          })
+        })
+    })
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files

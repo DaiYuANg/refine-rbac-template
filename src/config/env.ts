@@ -43,7 +43,7 @@ export const env = {
   /** Application mode - 'development' | 'production' */
   mode: raw.MODE as string,
 
-  /** Whether to run MSW mock API (dev default true, or VITE_USE_MOCK=true) */
+  /** Whether to use vite-plugin-mock-dev-server mock API (dev default true, or VITE_USE_MOCK=true) */
   useMock,
 
   /** Whether to enable Refine audit log provider (VITE_ENABLE_AUDIT_LOG=true) */
