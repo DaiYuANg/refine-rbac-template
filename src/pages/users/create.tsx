@@ -18,6 +18,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import {
+  EntityPageBody,
+  EntitySection,
+} from '@/components/shared/entity-page-section'
 import type { User } from '@/types/user'
 
 const userSchema = z.object({
@@ -54,42 +58,59 @@ export const UserCreate = () => {
   return (
     <CreateView>
       <CreateViewHeader resource="users" />
-      <Form {...form}>
-        <form
-          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
-          className="flex flex-col gap-6 max-w-md"
-        >
-          <FormField
-            control={control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('users.name')}</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={formLoading} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('users.email')}</FormLabel>
-                <FormControl>
-                  <Input {...field} type="email" disabled={formLoading} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={formLoading}>
-            {formLoading ? t('common.submitting') : t('common.create')}
-          </Button>
-        </form>
-      </Form>
+      <EntityPageBody className="max-w-2xl">
+        <EntitySection title={t('users.createTitle')}>
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit((values) => throttledOnFinish(values))}
+              className="flex flex-col gap-6"
+            >
+              <FormField
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('users.name')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('users.email')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={formLoading}
+                className="w-fit min-w-28"
+              >
+                {formLoading ? t('common.submitting') : t('common.create')}
+              </Button>
+            </form>
+          </Form>
+        </EntitySection>
+      </EntityPageBody>
     </CreateView>
   )
 }

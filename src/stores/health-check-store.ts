@@ -21,6 +21,6 @@ export const useHealthCheckStore = create<HealthCheckState>((set) => ({
   setDown: (error) =>
     set({
       isUp: false,
-      lastError: error ?? 'Network error',
+      lastError: error ?? null,
     }),
 }))

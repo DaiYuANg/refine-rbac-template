@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTable } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
@@ -16,13 +17,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useListDisplayStore } from '@/stores/list-display-store'
 import { SortableTableHead } from '@/components/shared/sortable-table-head'
+import { ListFilterPanel } from '@/components/shared/list-filter-panel'
+import {
+  TableEmptyState,
+  TableRowsSkeleton,
+} from '@/components/shared/table-feedback'
 import type { Permission } from '@/types/permission'
 
 export const PermissionList = () => {
   const { t } = useTranslation()
+  const [isFilterOpen, setIsFilterOpen] = useState(true)
   const {
     tableQuery: { isLoading },
     currentPage,
@@ -46,24 +52,29 @@ export const PermissionList = () => {
   const total = result?.total ?? 0
 
   const colCount = (showIdColumn ? 1 : 0) + 3
+  const hasActiveFilters = (filters?.length ?? 0) > 0
 
   return (
     <ListView>
       <ListViewHeader resource="permissions" canCreate={false} />
-      <div className="flex flex-col gap-4">
+      <div className="rounded-lg border p-3 md:p-4">
         <ListToolbar />
-        <PermissionListFilter
-          filters={filters}
-          onFiltersChange={(f) => setFilters(f, 'replace')}
-        />
+        <ListFilterPanel
+          open={isFilterOpen}
+          onOpenChange={setIsFilterOpen}
+          hasActiveFilters={hasActiveFilters}
+          onReset={() => setFilters([], 'replace')}
+          className="mt-3"
+        >
+          <PermissionListFilter
+            filters={filters}
+            onFiltersChange={(f) => setFilters(f, 'replace')}
+          />
+        </ListFilterPanel>
       </div>
       <div className="rounded-md border">
         {isLoading ? (
-          <div className="p-4 space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
-          </div>
+          <TableRowsSkeleton rows={6} />
         ) : (
           <Table>
             <TableHeader>
@@ -91,16 +102,16 @@ export const PermissionList = () => {
             <TableBody>
               {permissions.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={colCount}
-                    className="h-24 text-center text-muted-foreground"
-                  >
-                    {t('common.noData')}
+                  <TableCell colSpan={colCount}>
+                    <TableEmptyState />
                   </TableCell>
                 </TableRow>
               ) : (
                 permissions.map((perm: Permission) => (
-                  <TableRow key={perm.id}>
+                  <TableRow
+                    key={perm.id}
+                    className="transition-colors hover:bg-muted/40"
+                  >
                     {showIdColumn && (
                       <TableCell className="font-mono text-xs">
                         {perm.id}

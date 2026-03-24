@@ -26,10 +26,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useListDisplayStore } from '@/stores/list-display-store'
 import { BulkDeleteButton } from '@/components/shared/bulk-delete-button'
 import { SortableTableHead } from '@/components/shared/sortable-table-head'
+import { ListFilterPanel } from '@/components/shared/list-filter-panel'
+import {
+  TableEmptyState,
+  TableRowsSkeleton,
+} from '@/components/shared/table-feedback'
 import { normalizeApiError } from '@/types/errors'
 import type { Role } from '@/types/role'
 
@@ -54,6 +58,7 @@ export const RoleList = () => {
   })
   const { showIdColumn } = useListDisplayStore()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [isFilterOpen, setIsFilterOpen] = useState(true)
   const invalidate = useInvalidate()
   const { open } = useNotification()
 
@@ -118,11 +123,12 @@ export const RoleList = () => {
   }
 
   const colCount = (showIdColumn ? 1 : 0) + 4
+  const hasActiveFilters = (filters?.length ?? 0) > 0
 
   return (
     <ListView>
       <ListViewHeader resource="roles" />
-      <div className="flex flex-col gap-4">
+      <div className="rounded-lg border p-3 md:p-4">
         <ListToolbar
           bulkActions={
             <BulkDeleteButton
@@ -133,18 +139,22 @@ export const RoleList = () => {
             />
           }
         />
-        <RoleListFilter
-          filters={filters}
-          onFiltersChange={(f) => setFilters(f, 'replace')}
-        />
+        <ListFilterPanel
+          open={isFilterOpen}
+          onOpenChange={setIsFilterOpen}
+          hasActiveFilters={hasActiveFilters}
+          onReset={() => setFilters([], 'replace')}
+          className="mt-3"
+        >
+          <RoleListFilter
+            filters={filters}
+            onFiltersChange={(f) => setFilters(f, 'replace')}
+          />
+        </ListFilterPanel>
       </div>
       <div className="rounded-md border">
         {isLoading ? (
-          <div className="p-4 space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
-          </div>
+          <TableRowsSkeleton rows={6} />
         ) : (
           <Table>
             <TableHeader>
@@ -174,16 +184,19 @@ export const RoleList = () => {
             <TableBody>
               {roles.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={colCount + 1}
-                    className="h-24 text-center text-muted-foreground"
-                  >
-                    {t('common.noData')}
+                  <TableCell colSpan={colCount + 1}>
+                    <TableEmptyState />
                   </TableCell>
                 </TableRow>
               ) : (
                 roles.map((role: Role) => (
-                  <TableRow key={role.id}>
+                  <TableRow
+                    key={role.id}
+                    className="transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted/60"
+                    data-state={
+                      selectedIds.has(String(role.id)) ? 'selected' : undefined
+                    }
+                  >
                     <TableCell>
                       <Checkbox
                         checked={selectedIds.has(String(role.id))}

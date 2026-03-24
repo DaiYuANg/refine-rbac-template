@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { useOne, useShow } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
@@ -6,6 +5,11 @@ import {
   ShowViewHeader,
 } from '@/components/refine-ui/views/show-view'
 import { Skeleton } from '@/components/ui/skeleton'
+import { RbacBadgeGroup } from '@/components/shared/rbac-badge-group'
+import {
+  EntityPageBody,
+  EntitySection,
+} from '@/components/shared/entity-page-section'
 import type { Permission } from '@/types/permission'
 import type { PermissionGroup } from '@/types/permission-group'
 
@@ -42,41 +46,46 @@ export const PermissionShow = () => {
   return (
     <ShowView>
       <ShowViewHeader resource="permissions" />
-      <dl className="grid gap-4 max-w-md">
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('permissions.name')}
-          </dt>
-          <dd className="mt-1">{perm.name}</dd>
-        </div>
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('permissions.code')}
-          </dt>
-          <dd className="mt-1 font-mono text-sm">{perm.code}</dd>
-        </div>
+      <EntityPageBody>
+        <EntitySection title={t('permissions.title')}>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                {t('permissions.name')}
+              </dt>
+              <dd className="mt-1">{perm.name}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                {t('permissions.code')}
+              </dt>
+              <dd className="mt-1 font-mono text-sm">{perm.code}</dd>
+            </div>
+          </dl>
+        </EntitySection>
         {groupId && (
-          <div>
-            <dt className="text-sm font-medium text-muted-foreground">
-              {t('permissions.belongsToGroup')}
-            </dt>
-            <dd className="mt-1">
-              {isGroupLoading ? (
-                <Skeleton className="h-4 w-24" />
-              ) : group ? (
-                <Link
-                  to={`/permission-groups/show/${group.id}`}
-                  className="text-primary hover:underline"
-                >
-                  {group.name}
-                </Link>
-              ) : (
-                <span className="text-muted-foreground">-</span>
-              )}
-            </dd>
-          </div>
+          <EntitySection title={t('permissions.belongsToGroup')}>
+            {isGroupLoading ? (
+              <Skeleton className="h-4 w-24" />
+            ) : group ? (
+              <RbacBadgeGroup
+                title={t('permissions.belongsToGroup')}
+                items={[
+                  {
+                    id: group.id,
+                    label: group.name,
+                    href: `/permission-groups/show/${group.id}`,
+                    description: group.description,
+                    source: t('permissions.belongsToGroup'),
+                  },
+                ]}
+              />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </EntitySection>
         )}
-      </dl>
+      </EntityPageBody>
     </ShowView>
   )
 }

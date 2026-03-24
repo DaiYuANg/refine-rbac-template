@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { HttpError } from '@refinedev/core'
-import { useList, useUpdateMany } from '@refinedev/core'
+import { useList, useUpdateMany, useNotification } from '@refinedev/core'
 import { useForm as useHookForm } from '@refinedev/react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -31,6 +31,9 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import { motion } from '@/components/shared/motion'
+import { EntityPageBody } from '@/components/shared/entity-page-section'
+import { normalizeApiError } from '@/types/errors'
 import type { PermissionGroup } from '@/types/permission-group'
 import type { Permission } from '@/types/permission'
 
@@ -72,6 +75,7 @@ export const PermissionGroupEdit = () => {
     : []
 
   const { mutate: updateMany } = useUpdateMany<Permission>()
+  const { open } = useNotification()
   const [isAssigning, setIsAssigning] = useState(false)
 
   const assignedIds = new Set(
@@ -142,7 +146,27 @@ export const PermissionGroupEdit = () => {
         )
       )
     }
-    Promise.all(promises).finally(() => setIsAssigning(false))
+    Promise.all(promises)
+      .then(() => {
+        open?.({
+          type: 'success',
+          message: t('notifications.editSuccess', {
+            resource: t('permissionGroups.assignPermissions'),
+          }),
+        })
+      })
+      .catch((err: unknown) => {
+        const normalized = normalizeApiError(err)
+        open?.({
+          type: 'error',
+          message:
+            normalized.message ||
+            t('notifications.editError', {
+              resource: t('permissionGroups.assignPermissions'),
+            }),
+        })
+      })
+      .finally(() => setIsAssigning(false))
   }
 
   const isLoading = query?.isLoading ?? false
@@ -162,45 +186,61 @@ export const PermissionGroupEdit = () => {
   return (
     <EditView>
       <EditViewHeader resource="permission-groups" />
-      <div className="flex flex-col gap-6 max-w-2xl">
+      <EntityPageBody className="max-w-3xl">
         <Form {...form}>
           <form
             onSubmit={handleSubmit((values) => throttledOnFinish(values))}
             className="flex flex-col gap-6"
           >
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('permissionGroups.name')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={formLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('permissionGroups.description')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value ?? ''}
-                      disabled={formLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={formLoading}>
-              {formLoading ? t('common.saving') : t('common.save')}
-            </Button>
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('common.edit')}</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <FormField
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('permissionGroups.name')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('permissionGroups.description')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ''}
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-fit min-w-28"
+                >
+                  {formLoading ? t('common.saving') : t('common.save')}
+                </Button>
+              </CardContent>
+            </Card>
           </form>
         </Form>
 
@@ -213,9 +253,10 @@ export const PermissionGroupEdit = () => {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[240px] rounded-md border p-4">
-              <div className="flex flex-col gap-3">
+              <motion.div layout className="flex flex-col gap-3">
                 {permissions.map((perm: Permission) => (
-                  <label
+                  <motion.label
+                    layout
                     key={perm.id}
                     htmlFor={`permission-group-perm-${perm.id}`}
                     className="flex items-center gap-3 rounded-lg border p-3 cursor-pointer hover:bg-muted/50 transition-colors"
@@ -233,14 +274,14 @@ export const PermissionGroupEdit = () => {
                         {perm.code}
                       </span>
                     </div>
-                  </label>
+                  </motion.label>
                 ))}
                 {permissions.length === 0 && (
                   <p className="text-sm text-muted-foreground py-4">
                     {t('common.noData')}
                   </p>
                 )}
-              </div>
+              </motion.div>
             </ScrollArea>
             <Button
               type="button"
@@ -255,7 +296,7 @@ export const PermissionGroupEdit = () => {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </EntityPageBody>
     </EditView>
   )
 }

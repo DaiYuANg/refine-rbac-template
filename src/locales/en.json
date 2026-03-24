@@ -17,6 +17,7 @@
     "show": "Show",
     "delete": "Delete",
     "refresh": "Refresh",
+    "retry": "Retry",
     "cancel": "Cancel",
     "confirm": "Are you sure?",
     "save": "Save",
@@ -36,7 +37,11 @@
     "perPage": "per page"
   },
   "list": {
-    "showIdColumn": "Show ID"
+    "showIdColumn": "Show ID",
+    "filters": "Filters",
+    "active": "Active",
+    "clearFilters": "Clear",
+    "emptyHint": "Try changing filters or create a new item."
   },
   "common": {
     "search": "Keyword search",
@@ -51,6 +56,40 @@
     "saving": "Saving…",
     "noData": "No data",
     "actions": "Actions"
+  },
+  "loading": {
+    "page": "Loading page...",
+    "tableData": "Loading data...",
+    "dashboard": "Loading dashboard...",
+    "checkingNetwork": "Checking network connection...",
+    "retrying": "Retrying..."
+  },
+  "networkError": {
+    "title": "Network Error",
+    "description": "Unable to connect to the server. Please check your connection and try again.",
+    "reconnecting": "Reconnecting..."
+  },
+  "command": {
+    "title": "Command Palette",
+    "description": "Quickly find pages or data and jump to them.",
+    "open": "Search",
+    "shortcut": "Ctrl/Cmd + K",
+    "placeholder": "Search pages, users, roles...",
+    "noResults": "No results found.",
+    "navigation": "Navigation",
+    "recent": "Recent",
+    "clearRecent": "Clear recent history",
+    "data": "Data",
+    "home": "Home",
+    "usersList": "Users list",
+    "usersCreate": "Create user",
+    "rolesList": "Roles list",
+    "rolesCreate": "Create role",
+    "permissionsList": "Permissions list",
+    "groupsList": "Permission groups list",
+    "groupsCreate": "Create permission group",
+    "typeToSearch": "Type at least 2 characters to search data.",
+    "noDataMatches": "No matching data records."
   },
   "app": {
     "title": "RBAC Template",

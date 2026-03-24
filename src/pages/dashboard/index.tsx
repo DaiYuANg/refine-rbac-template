@@ -32,6 +32,7 @@ import {
   DASHBOARD_ROLE_DISTRIBUTION,
   DASHBOARD_PERMISSION_GROUPS,
 } from '@/mocks/fixtures/dashboard'
+import { PageLoadingState } from '@/components/shared/loading-indicator'
 
 const STAT_CARD_ICONS: Record<string, typeof Users> = {
   users: Users,
@@ -50,11 +51,7 @@ export const DashboardPage = () => {
   const permissionGroups = data?.permissionGroups ?? DASHBOARD_PERMISSION_GROUPS
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center">
-        <span className="text-muted-foreground text-sm">Loading…</span>
-      </div>
-    )
+    return <PageLoadingState title={t('loading.dashboard')} className="py-2" />
   }
 
   return (

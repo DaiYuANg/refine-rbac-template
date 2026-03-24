@@ -13,6 +13,7 @@ import { DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ThemeSelect } from '@/components/refine-ui/theme/theme-select'
 import { LanguageToggle } from '@/components/refine-ui/i18n/language-toggle'
 import { UserAvatar } from '@/components/refine-ui/layout/user-avatar'
+import { GlobalCommandPalette } from '@/components/shared/global-command-palette'
 import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar'
 import { LogOutIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -42,6 +43,7 @@ function DesktopHeader() {
         'z-40'
       )}
     >
+      <GlobalCommandPalette />
       <LanguageToggle />
       <ThemeSelect />
       <UserDropdown />
@@ -116,6 +118,7 @@ function MobileHeader() {
       </div>
 
       <div className="flex items-center gap-2">
+        <GlobalCommandPalette compact className={cn('h-8', 'w-8')} />
         <LanguageToggle className={cn('h-8', 'w-8')} />
         <ThemeSelect />
       </div>

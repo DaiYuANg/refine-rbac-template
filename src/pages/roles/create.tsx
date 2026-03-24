@@ -18,6 +18,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import {
+  EntityPageBody,
+  EntitySection,
+} from '@/components/shared/entity-page-section'
 import type { Role } from '@/types/role'
 
 const roleSchema = z.object({
@@ -58,46 +62,59 @@ export const RoleCreate = () => {
   return (
     <CreateView>
       <CreateViewHeader resource="roles" />
-      <Form {...form}>
-        <form
-          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
-          className="flex flex-col gap-6 max-w-md"
-        >
-          <FormField
-            control={control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('roles.name')}</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={formLoading} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('roles.description')}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={formLoading}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={formLoading}>
-            {formLoading ? t('common.submitting') : t('common.create')}
-          </Button>
-        </form>
-      </Form>
+      <EntityPageBody className="max-w-2xl">
+        <EntitySection title={t('roles.createTitle')}>
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit((values) => throttledOnFinish(values))}
+              className="flex flex-col gap-6"
+            >
+              <FormField
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('roles.name')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('roles.description')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={formLoading}
+                className="w-fit min-w-28"
+              >
+                {formLoading ? t('common.submitting') : t('common.create')}
+              </Button>
+            </form>
+          </Form>
+        </EntitySection>
+      </EntityPageBody>
     </CreateView>
   )
 }

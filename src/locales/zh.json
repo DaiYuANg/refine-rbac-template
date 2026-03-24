@@ -17,6 +17,7 @@
     "show": "查看",
     "delete": "删除",
     "refresh": "刷新",
+    "retry": "重试",
     "cancel": "取消",
     "confirm": "确认要执行此操作吗？",
     "save": "保存",
@@ -36,7 +37,11 @@
     "perPage": "条/页"
   },
   "list": {
-    "showIdColumn": "显示 ID"
+    "showIdColumn": "显示 ID",
+    "filters": "筛选条件",
+    "active": "已生效",
+    "clearFilters": "清空",
+    "emptyHint": "可尝试调整筛选条件，或创建新数据。"
   },
   "common": {
     "search": "关键字搜索",
@@ -51,6 +56,40 @@
     "saving": "保存中…",
     "noData": "暂无数据",
     "actions": "操作"
+  },
+  "loading": {
+    "page": "页面加载中...",
+    "tableData": "数据加载中...",
+    "dashboard": "仪表盘加载中...",
+    "checkingNetwork": "正在检查网络连接...",
+    "retrying": "重试中..."
+  },
+  "networkError": {
+    "title": "网络异常",
+    "description": "无法连接到服务器，请检查网络连接后重试。",
+    "reconnecting": "正在尝试重新连接..."
+  },
+  "command": {
+    "title": "全局命令面板",
+    "description": "可快速搜索页面或数据并跳转。",
+    "open": "搜索",
+    "shortcut": "Ctrl/Cmd + K",
+    "placeholder": "搜索页面、用户、角色...",
+    "noResults": "未找到结果。",
+    "navigation": "页面导航",
+    "recent": "最近访问",
+    "clearRecent": "清空最近访问",
+    "data": "数据搜索",
+    "home": "首页",
+    "usersList": "用户列表",
+    "usersCreate": "新建用户",
+    "rolesList": "角色列表",
+    "rolesCreate": "新建角色",
+    "permissionsList": "权限列表",
+    "groupsList": "权限组列表",
+    "groupsCreate": "新建权限组",
+    "typeToSearch": "至少输入 2 个字符后开始搜索数据。",
+    "noDataMatches": "未匹配到相关数据。"
   },
   "app": {
     "title": "RBAC Template",

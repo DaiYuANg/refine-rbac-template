@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { PageLoadingState } from '@/components/shared/loading-indicator'
 
 const DashboardPage = lazy(() =>
   import('@/pages/dashboard').then((m) => ({ default: m.DashboardPage }))
@@ -59,11 +61,13 @@ const PermissionGroupShow = lazy(() =>
   }))
 )
 
-const PageFallback = () => (
-  <div className="flex min-h-[200px] items-center justify-center">
-    <span className="text-muted-foreground text-sm">Loading…</span>
-  </div>
-)
+const PageFallback = () => {
+  const { t } = useTranslation()
+
+  return (
+    <PageLoadingState title={t('loading.page')} className="max-w-4xl py-8" />
+  )
+}
 
 export const AppRoutes = () => (
   <Suspense fallback={<PageFallback />}>

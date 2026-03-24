@@ -36,6 +36,8 @@ import {
 } from '@/components/ui/collapsible'
 import { ChevronRight, Key } from 'lucide-react'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import { AnimatePresence, motion } from '@/components/shared/motion'
+import { EntityPageBody } from '@/components/shared/entity-page-section'
 import type { Role } from '@/types/role'
 import type { PermissionGroup } from '@/types/permission-group'
 import type { Permission } from '@/types/permission'
@@ -133,42 +135,61 @@ export const RoleEdit = () => {
   return (
     <EditView>
       <EditViewHeader resource="roles" />
-      <div className="flex flex-col gap-6 max-w-2xl">
+      <EntityPageBody className="max-w-3xl">
         <Form {...form}>
           <form
             onSubmit={handleSubmit((values) => throttledOnFinish(values))}
             className="flex flex-col gap-6"
           >
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('roles.name')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={formLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('roles.description')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value ?? ''}
-                      disabled={formLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('common.edit')}</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <FormField
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('roles.name')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('roles.description')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ''}
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-fit min-w-28"
+                >
+                  {formLoading ? t('common.saving') : t('common.save')}
+                </Button>
+              </CardContent>
+            </Card>
 
             <Card>
               <CardHeader>
@@ -178,76 +199,85 @@ export const RoleEdit = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col gap-2">
+                <motion.div layout className="flex flex-col gap-2">
                   {groups.map((group: PermissionGroup) => {
                     const perms = permissionsByGroup[group.id] ?? []
                     return (
-                      <Collapsible key={group.id}>
-                        <div className="flex items-start gap-2 rounded-lg border p-3">
-                          <Checkbox
-                            checked={selectedGroupIds.has(group.id)}
-                            onCheckedChange={(c) =>
-                              handleGroupToggle(group.id, c === true)
-                            }
-                          />
-                          <CollapsibleTrigger className="flex flex-1 items-center gap-2 text-left hover:opacity-80">
-                            {perms.length > 0 ? (
-                              <ChevronRight className="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-90" />
-                            ) : (
-                              <span className="w-4" />
-                            )}
-                            <div>
-                              <span className="font-medium">{group.name}</span>
-                              {group.description && (
-                                <span className="ml-2 text-sm text-muted-foreground">
-                                  {group.description}
-                                </span>
+                      <motion.div layout key={group.id}>
+                        <Collapsible>
+                          <div className="flex items-start gap-2 rounded-lg border p-3 transition-colors hover:bg-muted/30">
+                            <Checkbox
+                              checked={selectedGroupIds.has(group.id)}
+                              onCheckedChange={(c) =>
+                                handleGroupToggle(group.id, c === true)
+                              }
+                            />
+                            <CollapsibleTrigger className="flex flex-1 items-center gap-2 text-left hover:opacity-80">
+                              {perms.length > 0 ? (
+                                <ChevronRight className="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-90" />
+                              ) : (
+                                <span className="w-4" />
                               )}
-                              <span className="ml-2 text-xs text-muted-foreground">
-                                ({perms.length}{' '}
-                                {perms.length === 1
-                                  ? t('permissions.permissions').toLowerCase()
-                                  : t('permissions.permissions').toLowerCase()}
-                                )
-                              </span>
-                            </div>
-                          </CollapsibleTrigger>
-                        </div>
-                        <CollapsibleContent>
-                          <div className="ml-8 mt-1 flex flex-wrap gap-2 border-l-2 pl-4">
-                            {perms.length === 0 ? (
-                              <span className="text-sm text-muted-foreground">
-                                {t('common.noData')}
-                              </span>
-                            ) : (
-                              perms.map((p: Permission) => (
-                                <span
-                                  key={p.id}
-                                  className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs"
-                                >
-                                  <Key className="h-3 w-3" />
-                                  <span>{p.name}</span>
-                                  <span className="font-mono text-muted-foreground">
-                                    {p.code}
-                                  </span>
+                              <div>
+                                <span className="font-medium">
+                                  {group.name}
                                 </span>
-                              ))
-                            )}
+                                {group.description && (
+                                  <span className="ml-2 text-sm text-muted-foreground">
+                                    {group.description}
+                                  </span>
+                                )}
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  ({perms.length}{' '}
+                                  {perms.length === 1
+                                    ? t('permissions.permissions').toLowerCase()
+                                    : t(
+                                        'permissions.permissions'
+                                      ).toLowerCase()}
+                                  )
+                                </span>
+                              </div>
+                            </CollapsibleTrigger>
                           </div>
-                        </CollapsibleContent>
-                      </Collapsible>
+                          <CollapsibleContent>
+                            <div className="ml-8 mt-1 flex flex-wrap gap-2 border-l-2 pl-4">
+                              {perms.length === 0 ? (
+                                <span className="text-sm text-muted-foreground">
+                                  {t('common.noData')}
+                                </span>
+                              ) : (
+                                <AnimatePresence initial={false}>
+                                  {perms.map((p: Permission) => (
+                                    <motion.span
+                                      layout
+                                      key={p.id}
+                                      initial={{ opacity: 0, y: 4 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{ opacity: 0, y: -4 }}
+                                      transition={{ duration: 0.16 }}
+                                      className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs"
+                                    >
+                                      <Key className="h-3 w-3" />
+                                      <span>{p.name}</span>
+                                      <span className="font-mono text-muted-foreground">
+                                        {p.code}
+                                      </span>
+                                    </motion.span>
+                                  ))}
+                                </AnimatePresence>
+                              )}
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </motion.div>
                     )
                   })}
-                </div>
+                </motion.div>
               </CardContent>
             </Card>
-
-            <Button type="submit" disabled={formLoading}>
-              {formLoading ? t('common.saving') : t('common.save')}
-            </Button>
           </form>
         </Form>
-      </div>
+      </EntityPageBody>
     </EditView>
   )
 }

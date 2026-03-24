@@ -19,6 +19,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import {
+  EntityPageBody,
+  EntitySection,
+} from '@/components/shared/entity-page-section'
 import type { Permission } from '@/types/permission'
 
 const permissionSchema = z.object({
@@ -71,63 +75,77 @@ export const PermissionEdit = () => {
   return (
     <EditView>
       <EditViewHeader resource="permissions" />
-      <Form {...form}>
-        <form
-          onSubmit={handleSubmit((values) => throttledOnFinish(values))}
-          className="flex flex-col gap-6 max-w-md"
-        >
-          <FormField
-            control={control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('permissions.name')}</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={formLoading} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="code"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('permissions.code')}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    disabled={formLoading}
-                    placeholder={t('permissions.codePlaceholder')}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="groupId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('permissions.groupId')}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={formLoading}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={formLoading}>
-            {formLoading ? t('common.saving') : t('common.save')}
-          </Button>
-        </form>
-      </Form>
+      <EntityPageBody className="max-w-2xl">
+        <EntitySection title={t('common.edit')}>
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit((values) => throttledOnFinish(values))}
+              className="flex flex-col gap-6"
+            >
+              <FormField
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('permissions.name')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('permissions.code')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        placeholder={t('permissions.codePlaceholder')}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="groupId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('permissions.groupId')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        disabled={formLoading}
+                        className="h-10"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={formLoading}
+                className="w-fit min-w-28"
+              >
+                {formLoading ? t('common.saving') : t('common.save')}
+              </Button>
+            </form>
+          </Form>
+        </EntitySection>
+      </EntityPageBody>
     </EditView>
   )
 }

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { useMany, useShow } from '@refinedev/core'
 import { useTranslation } from 'react-i18next'
 import {
@@ -6,7 +5,11 @@ import {
   ShowViewHeader,
 } from '@/components/refine-ui/views/show-view'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { RbacBadgeGroup } from '@/components/shared/rbac-badge-group'
+import {
+  EntityPageBody,
+  EntitySection,
+} from '@/components/shared/entity-page-section'
 import type { Role } from '@/types/role'
 import type { PermissionGroup } from '@/types/permission-group'
 
@@ -48,51 +51,43 @@ export const RoleShow = () => {
   return (
     <ShowView>
       <ShowViewHeader resource="roles" />
-      <dl className="grid gap-4 max-w-md">
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('roles.name')}
-          </dt>
-          <dd className="mt-1">{role.name}</dd>
-        </div>
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('roles.description')}
-          </dt>
-          <dd className="mt-1">{role.description ?? '-'}</dd>
-        </div>
-        <div>
-          <dt className="text-sm font-medium text-muted-foreground">
-            {t('permissionGroups.title')}
-          </dt>
-          <dd className="mt-1">
-            {isGroupsLoading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-28" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-            ) : selectedGroups.length === 0 ? (
-              <span className="text-sm text-muted-foreground">
-                {t('common.noData')}
-              </span>
-            ) : (
-              <ScrollArea className="h-[220px] rounded-md border p-2">
-                <div className="flex flex-wrap gap-2">
-                  {selectedGroups.map((g: PermissionGroup) => (
-                    <Link
-                      key={g.id}
-                      to={`/permission-groups/show/${g.id}`}
-                      className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs hover:bg-muted/80 hover:underline"
-                    >
-                      <span>{g.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </ScrollArea>
-            )}
-          </dd>
-        </div>
-      </dl>
+      <EntityPageBody>
+        <EntitySection title={t('roles.title')}>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                {t('roles.name')}
+              </dt>
+              <dd className="mt-1">{role.name}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                {t('roles.description')}
+              </dt>
+              <dd className="mt-1">{role.description ?? '-'}</dd>
+            </div>
+          </dl>
+        </EntitySection>
+        <EntitySection title={t('permissionGroups.title')}>
+          {isGroupsLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ) : (
+            <RbacBadgeGroup
+              title={t('permissionGroups.title')}
+              items={selectedGroups.map((g: PermissionGroup) => ({
+                id: g.id,
+                label: g.name,
+                href: `/permission-groups/show/${g.id}`,
+                description: g.description,
+                source: t('roles.assignPermissionGroups'),
+              }))}
+            />
+          )}
+        </EntitySection>
+      </EntityPageBody>
     </ShowView>
   )
 }

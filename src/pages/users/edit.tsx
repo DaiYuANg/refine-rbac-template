@@ -30,6 +30,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useThrottledCallback } from '@/hooks/use-throttled-callback'
+import { motion } from '@/components/shared/motion'
+import { EntityPageBody } from '@/components/shared/entity-page-section'
 import type { User } from '@/types/user'
 import type { Role } from '@/types/role'
 
@@ -110,38 +112,61 @@ export const UserEdit = () => {
   return (
     <EditView>
       <EditViewHeader resource="users" />
-      <div className="flex flex-col gap-6 max-w-2xl">
+      <EntityPageBody className="max-w-3xl">
         <Form {...form}>
           <form
             onSubmit={handleSubmit((values) => throttledOnFinish(values))}
             className="flex flex-col gap-6"
           >
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('users.name')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={formLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('users.email')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" disabled={formLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('common.edit')}</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <FormField
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('users.name')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('users.email')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          disabled={formLoading}
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-fit min-w-28"
+                >
+                  {formLoading ? t('common.saving') : t('common.save')}
+                </Button>
+              </CardContent>
+            </Card>
 
             <Card>
               <CardHeader>
@@ -149,9 +174,10 @@ export const UserEdit = () => {
                 <CardDescription>{t('users.assignRolesDesc')}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <motion.div layout className="grid gap-3 sm:grid-cols-2">
                   {roles.map((role: Role) => (
-                    <label
+                    <motion.label
+                      layout
                       key={role.id}
                       htmlFor={`user-edit-role-${role.id}`}
                       className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
@@ -166,23 +192,19 @@ export const UserEdit = () => {
                       <div className="min-w-0 flex-1">
                         <div className="font-medium">{role.name}</div>
                         {role.description && (
-                          <div className="text-sm text-muted-foreground mt-0.5">
+                          <div className="mt-0.5 text-sm text-muted-foreground">
                             {role.description}
                           </div>
                         )}
                       </div>
-                    </label>
+                    </motion.label>
                   ))}
-                </div>
+                </motion.div>
               </CardContent>
             </Card>
-
-            <Button type="submit" disabled={formLoading}>
-              {formLoading ? t('common.saving') : t('common.save')}
-            </Button>
           </form>
         </Form>
-      </div>
+      </EntityPageBody>
     </EditView>
   )
 }
