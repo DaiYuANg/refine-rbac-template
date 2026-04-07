@@ -30,7 +30,7 @@ export const ReactQueryDevtoolsPanel = () => {
 
   return (
     <Suspense fallback={null}>
-      <LazyDevtools initialIsOpen={false} buttonPosition="bottom-right" />
+      <LazyDevtools initialIsOpen={false} buttonPosition="top-right" />
     </Suspense>
   )
 }
